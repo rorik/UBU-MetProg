@@ -1,10 +1,12 @@
 package juego.control;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * [tests.juego.control.ConfiguracionTamañoTest] Created by Roderick D. on 2017/10/28.
+ *
  * @author Roderick D.
  * rorik.me
  * github.com/rorik

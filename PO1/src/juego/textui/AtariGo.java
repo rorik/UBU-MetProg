@@ -1,7 +1,5 @@
 package juego.textui;
 
-import java.util.Scanner;
-
 import juego.control.ArbitroAtariGo;
 import juego.control.ConfiguracionAtariGo;
 import juego.modelo.Celda;
@@ -10,35 +8,39 @@ import juego.modelo.Jugador;
 import juego.modelo.Tablero;
 import juego.util.ConversorJugada;
 
+import java.util.Scanner;
+
 /**
  * Juego del AtariGo. Ejercicio práctico - Metodología de la Programación.
- * <P>
+ * <p>
  * 2º ITIG - Curso 2017-2018. Interfaz en modo texto del juego.
  * Versión de código incompleto a completar por los alumnos.
- * 
+ *
  * @author <A HREF="mailto:rdg1003@alu.ubu.es">Rodrigo Díaz</A>
  * @version 1.0
- * 
  */
 public class AtariGo {
-	/** Tamaño. */
-	private static int tamaño;
+    /**
+     * Tamaño.
+     */
+    private static int tamaño;
 
-	/** Arbitro. */
-	private static ArbitroAtariGo arbitro;
+    /**
+     * Arbitro.
+     */
+    private static ArbitroAtariGo arbitro;
 
-	/**
-	 * Flujo de ejecución principal del juego.
-	 * 
-	 * @param args
-	 *            nombres de los jugadores y tamaño del tablero
-	 */
-	public static void main(String[] args) {
-		if (!sonArgumentosValidos(args)) {
-		    mostrarAyuda();
-		    args = new String[]{};
+    /**
+     * Flujo de ejecución principal del juego.
+     *
+     * @param args nombres de los jugadores y tamaño del tablero
+     */
+    public static void main(String[] args) {
+        if (!sonArgumentosValidos(args)) {
+            mostrarAyuda();
+            args = new String[]{};
         }
-		inicializarConArgumentos(args);
+        inicializarConArgumentos(args);
         while (!arbitro.estaAcabado()) {
             mostrarTablero(arbitro.obtenerTablero());
             mostrarPrompt();
@@ -46,192 +48,182 @@ public class AtariGo {
             realizarJugadaSiEsValida(celda);
         }
         mostrarResultadoFinalPartida(arbitro);
-	}
+    }
 
-	/**
-	 * Realiza la jugada si es valida, mostrando un error en caso contario.
-	 * 
-	 * @param celda
-	 *            celda
-	 */
-	private static void realizarJugadaSiEsValida(Celda celda) {
-		if (celda != null && arbitro.esMovimientoLegal(celda)) {
-			arbitro.jugar(celda);
-		} else {
-			mostarMensajeMovimientoIncorrecto();
-		}
-	}
+    /**
+     * Realiza la jugada si es valida, mostrando un error en caso contario.
+     *
+     * @param celda celda
+     */
+    private static void realizarJugadaSiEsValida(Celda celda) {
+        if (celda != null && arbitro.esMovimientoLegal(celda)) {
+            arbitro.jugar(celda);
+        } else {
+            mostarMensajeMovimientoIncorrecto();
+        }
+    }
 
-	/**
-	 * Lee la entrada del usuario traduciéndola a la celda correspondiente.
-	 * 
-	 * @param scanner
-	 *            scanner
-	 * @param tablero
-	 *            tablero
-	 * @return celda correspondiente o null en caso de no existir equivalencia
-	 */
-	private static Celda introducirCelda(Scanner scanner, Tablero tablero) {
-		String entrada;
-		entrada = scanner.next().toUpperCase();
-		return  ConversorJugada.convertir(entrada, tablero);
-	}
+    /**
+     * Lee la entrada del usuario traduciéndola a la celda correspondiente.
+     *
+     * @param scanner scanner
+     * @param tablero tablero
+     * @return celda correspondiente o null en caso de no existir equivalencia
+     */
+    private static Celda introducirCelda(Scanner scanner, Tablero tablero) {
+        String entrada;
+        entrada = scanner.next().toUpperCase();
+        return ConversorJugada.convertir(entrada, tablero);
+    }
 
-	/**
-	 * Muestra la información sobre un movimiento incorrecto.
-	 */
-	private static void mostarMensajeMovimientoIncorrecto() {
-		System.err.print("Movimiento incorrecto.\n" + " Compruebe sintaxis y semántica de la jugada "
-				+ " (no se puede colocar en celda ocupada ni se permiten suicidios).");
-	}
+    /**
+     * Muestra la información sobre un movimiento incorrecto.
+     */
+    private static void mostarMensajeMovimientoIncorrecto() {
+        System.err.print("Movimiento incorrecto.\n" + " Compruebe sintaxis y semántica de la jugada "
+                + " (no se puede colocar en celda ocupada ni se permiten suicidios).");
+    }
 
-	/**
-	 * Mustra el prompt del juego para introducir datos desde teclado.
-	 * 
-	 */
-	private static void mostrarPrompt() {
-		System.out.println();
-		System.out.printf("El turno es de: %s con piedras %c de color %s%n",
-				arbitro.obtenerJugadorConTurno().obtenerNombre(),
-				arbitro.obtenerJugadorConTurno().obtenerColor().toChar(),
-				arbitro.obtenerJugadorConTurno().obtenerColor());
-		System.out.print("Introduce jugada: ");
-	}
+    /**
+     * Mustra el prompt del juego para introducir datos desde teclado.
+     */
+    private static void mostrarPrompt() {
+        System.out.println();
+        System.out.printf("El turno es de: %s con piedras %c de color %s%n",
+                arbitro.obtenerJugadorConTurno().obtenerNombre(),
+                arbitro.obtenerJugadorConTurno().obtenerColor().toChar(),
+                arbitro.obtenerJugadorConTurno().obtenerColor());
+        System.out.print("Introduce jugada: ");
+    }
 
-	/**
-	 * Muestra el resultado final de la partida.
-	 * 
-	 * @param arbitro
-	 *            arbitro
-	 */
-	private static void mostrarResultadoFinalPartida(ArbitroAtariGo arbitro) {
-		mostrarTablero(arbitro.obtenerTablero());
-		System.out.println();
-		Jugador jugador = arbitro.obtenerGanador();
-		System.out.println("El ganador es " + jugador.obtenerNombre());
-	}
+    /**
+     * Muestra el resultado final de la partida.
+     *
+     * @param arbitro arbitro
+     */
+    private static void mostrarResultadoFinalPartida(ArbitroAtariGo arbitro) {
+        mostrarTablero(arbitro.obtenerTablero());
+        System.out.println();
+        Jugador jugador = arbitro.obtenerGanador();
+        System.out.println("El ganador es " + jugador.obtenerNombre());
+    }
 
-	/**
-	 * Valida los argumentos del juego introducidos por teclado.
-	 * 
-	 * @param args
-	 *            argumentos
-	 * @return true si son correctos, false en caso contario
-	 */
-	private static boolean sonArgumentosValidos(String[] args) {
-		boolean validacion = true;
-		if (args.length != 0 && args.length != 3) {
-			validacion = false;
-		} else if (args.length == 3) {
-			// Validacion de tamaños de teclado.
-			tamaño = Integer.parseInt(args[2]);
-			if (!ConfiguracionAtariGo.esTamañoValido(tamaño)) {
-				validacion = false;
-			}
-		}
-		return validacion;
-	}
+    /**
+     * Valida los argumentos del juego introducidos por teclado.
+     *
+     * @param args argumentos
+     * @return true si son correctos, false en caso contario
+     */
+    private static boolean sonArgumentosValidos(String[] args) {
+        boolean validacion = true;
+        if (args.length != 0 && args.length != 3) {
+            validacion = false;
+        } else if (args.length == 3) {
+            // Validacion de tamaños de teclado.
+            tamaño = Integer.parseInt(args[2]);
+            if (!ConfiguracionAtariGo.esTamañoValido(tamaño)) {
+                validacion = false;
+            }
+        }
+        return validacion;
+    }
 
-	/**
-	 * Inicializa los elementos del juego. Se supone que los argumentos han sido
-	 * validados previamente.
-	 * 
-	 * @param args
-	 *            argumentos válidos
-	 */
-	private static void inicializarConArgumentos(String[] args) {
-		assert sonArgumentosValidos(args);
-		String jugador1;
-		String jugador2;
-		if (args.length == 0) {
-			// Valores por defecto
-			tamaño = ConfiguracionAtariGo.TAMAÑO_POR_DEFECTO;
-			jugador1 = "Abel";
-			jugador2 = "Cain";
-		} else {
-			tamaño = Integer.parseInt(args[2]);
-			jugador1 = args[0];
-			jugador2 = args[1];
-		}		
-		inicializarArbitro(jugador1, jugador2, tamaño);
-	}
+    /**
+     * Inicializa los elementos del juego. Se supone que los argumentos han sido
+     * validados previamente.
+     *
+     * @param args argumentos válidos
+     */
+    private static void inicializarConArgumentos(String[] args) {
+        assert sonArgumentosValidos(args);
+        String jugador1;
+        String jugador2;
+        if (args.length == 0) {
+            // Valores por defecto
+            tamaño = ConfiguracionAtariGo.TAMAÑO_POR_DEFECTO;
+            jugador1 = "Abel";
+            jugador2 = "Cain";
+        } else {
+            tamaño = Integer.parseInt(args[2]);
+            jugador1 = args[0];
+            jugador2 = args[1];
+        }
+        inicializarArbitro(jugador1, jugador2, tamaño);
+    }
 
-	/**
-	 * Inicializa el árbitro.
-	 * 
-	 * @param jugador1 jugador1
-	 * @param jugador2 jugador2
-	 * @param tamaño tamaño
-	 */
-	private static void inicializarArbitro(String jugador1, String jugador2, int tamaño) {
-		Tablero tablero = new Tablero(tamaño, tamaño);
-		arbitro = new ArbitroAtariGo(tablero);
-		arbitro.registrarJugadoresEnOrden(jugador1);
-		arbitro.registrarJugadoresEnOrden(jugador2);
-	}
+    /**
+     * Inicializa el árbitro.
+     *
+     * @param jugador1 jugador1
+     * @param jugador2 jugador2
+     * @param tamaño   tamaño
+     */
+    private static void inicializarArbitro(String jugador1, String jugador2, int tamaño) {
+        Tablero tablero = new Tablero(tamaño, tamaño);
+        arbitro = new ArbitroAtariGo(tablero);
+        arbitro.registrarJugadoresEnOrden(jugador1);
+        arbitro.registrarJugadoresEnOrden(jugador2);
+    }
 
-	/**
-	 * Muestra la ayuda en línea para la inicialización correcta del juego.
-	 */
-	private static void mostrarAyuda() {
-		System.out.println("Juego del AtariGo");
-		System.out.println();
-		System.out.println("Uso1: java juego.textui.AtariGo nombreJugador1 nombreJugador2 tamaño");
-		System.out.println("Uso2 (valores por defecto): java juego.textui.AtariGo");
-		System.err.println("Tamaño debe ser uno de los permitidos en la configuración del juego."
-				+ ConfiguracionAtariGo.generarAyuda());
-	}
+    /**
+     * Muestra la ayuda en línea para la inicialización correcta del juego.
+     */
+    private static void mostrarAyuda() {
+        System.out.println("Juego del AtariGo");
+        System.out.println();
+        System.out.println("Uso1: java juego.textui.AtariGo nombreJugador1 nombreJugador2 tamaño");
+        System.out.println("Uso2 (valores por defecto): java juego.textui.AtariGo");
+        System.err.println("Tamaño debe ser uno de los permitidos en la configuración del juego."
+                + ConfiguracionAtariGo.generarAyuda());
+    }
 
-	/**
-	 * Muestra el estado actual del tablero.
-	 * 
-	 * @param tablero
-	 *            tablero a pintar en pantalla.
-	 */
-	private static void mostrarTablero(Tablero tablero) {
-		pintarFilas(tablero);
-		pintarLetrasEnLineaInferior(tablero);
-	}
-	
+    /**
+     * Muestra el estado actual del tablero.
+     *
+     * @param tablero tablero a pintar en pantalla.
+     */
+    private static void mostrarTablero(Tablero tablero) {
+        pintarFilas(tablero);
+        pintarLetrasEnLineaInferior(tablero);
+    }
 
-	/**
-	 * Pinta las filas con el número correspondiente y las piedras en cada fila.
-	 * 
-	 * @param tablero
-	 *            tablero
-	 */
-	private static void pintarFilas(Tablero tablero) {
-		System.out.println();
-		for (int i = 0; i < tablero.obtenerNumeroFilas(); i++) {
-			System.out.print((tablero.obtenerNumeroFilas() - i) + "\t");
-			for (int j = 0; j < tablero.obtenerNumeroColumnas(); j++) {
-				Celda celda = tablero.obtenerCelda(i, j);
-				if (celda.estaVacia()) {
-					System.out.print(" - ");
-				} else {
-					Color color = celda.obtenerColorDePiedra();
-					System.out.printf(" %s ", color.toChar());
-				}
-			}
-			System.out.println();
-		}
-	}
 
-	/**
-	 * Pinta la fila inferior con las letras.
-	 * 
-	 * @param tablero
-	 *            tablero
-	 */
-	private static void pintarLetrasEnLineaInferior(Tablero tablero) {
-		System.out.println();
-		System.out.print("\t");
-		for (int i = 0; i < tablero.obtenerNumeroColumnas() + 1; i++) {
-			char letra = (char) (i + 'A');
-			if (letra != ConfiguracionAtariGo.LETRA_NO_UTILIZADA) {
-				System.out.print(" " + letra + " ");
-			}
-		}
-		System.out.println();
-	}
+    /**
+     * Pinta las filas con el número correspondiente y las piedras en cada fila.
+     *
+     * @param tablero tablero
+     */
+    private static void pintarFilas(Tablero tablero) {
+        System.out.println();
+        for (int i = 0; i < tablero.obtenerNumeroFilas(); i++) {
+            System.out.print((tablero.obtenerNumeroFilas() - i) + "\t");
+            for (int j = 0; j < tablero.obtenerNumeroColumnas(); j++) {
+                Celda celda = tablero.obtenerCelda(i, j);
+                if (celda.estaVacia()) {
+                    System.out.print(" - ");
+                } else {
+                    Color color = celda.obtenerColorDePiedra();
+                    System.out.printf(" %s ", color.toChar());
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    /**
+     * Pinta la fila inferior con las letras.
+     *
+     * @param tablero tablero
+     */
+    private static void pintarLetrasEnLineaInferior(Tablero tablero) {
+        System.out.println();
+        System.out.print("\t");
+        for (int i = 0; i < tablero.obtenerNumeroColumnas() + 1; i++) {
+            char letra = (char) (i + 'A');
+            if (letra != ConfiguracionAtariGo.LETRA_NO_UTILIZADA) {
+                System.out.print(" " + letra + " ");
+            }
+        }
+        System.out.println();
+    }
 }

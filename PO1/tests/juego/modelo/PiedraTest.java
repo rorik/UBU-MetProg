@@ -26,7 +26,7 @@ class PiedraTest {
     @Test
     void colocarEn() {
         Piedra piedra = new Piedra(Color.NEGRO);
-        Celda celda = new Celda(0,0);
+        Celda celda = new Celda(0, 0);
         piedra.colocarEn(celda);
         assertEquals(celda, piedra.obtenerCelda());
     }
@@ -35,7 +35,7 @@ class PiedraTest {
     void obtenerCelda() {
         Piedra piedra = new Piedra(Color.BLANCO);
         assertNull(piedra.obtenerCelda());
-        piedra.colocarEn(new Celda(0,0));
+        piedra.colocarEn(new Celda(0, 0));
         assertNotNull(piedra.obtenerCelda());
     }
 
@@ -43,7 +43,7 @@ class PiedraTest {
     void testToString() {
         assertEquals("null/NEGRO", new Piedra(Color.NEGRO).toString());
         Piedra piedra = new Piedra(Color.BLANCO);
-        piedra.colocarEn(new Celda(1,2));
+        piedra.colocarEn(new Celda(1, 2));
         assertEquals("(1 / 2)/BLANCO", piedra.toString());
     }
 
