@@ -20,7 +20,7 @@ public class Grupo {
         this.color = celda.obtenerPiedra() == null ? null : celda.obtenerPiedra().obtenerColor();
         this.tablero = tablero;
         celdas.add(celda);
-        // TODO @FWMBR
+        // TODO @FWMBR contador counts testing groups.
     }
 
     /**

@@ -89,16 +89,11 @@ public class ArbitroAtariGo {
      */
     public Jugador obtenerGanador() {
         for (int i = 0; i < jugadores.length; i++) {
-            boolean puedeRealizarMovimientos = false;
             ArrayList grupos = tablero.obtenerGruposDelJugador(jugadores[i]);
-            for (Object grupo : grupos) {
-                if (((Grupo) grupo).estaVivo()) puedeRealizarMovimientos = true;
-            }
-            if (!puedeRealizarMovimientos && (tablero.estaCompleto() || grupos.size() > 0))
-                return jugadores[++i % 2];
+            for (Object grupo : grupos)
+                if (!((Grupo) grupo).estaVivo()) return jugadores[++i % 2];
         }
         return null;
-        // @TODO @PR=10 @NEXTVERSION Game stops when a single group is dead.
     }
 
     /**
@@ -127,6 +122,7 @@ public class ArbitroAtariGo {
         if (turno) copia.cambiarTurno();
         copia.jugar(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda));
         return esEspacioAbierto(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda), copia.obtenerTablero());
+        // TODO @MAJOR @PR=9 @NEXTVERSION Allow placing inside empty space if there's a possibility of winning/losing.
     }
 
     private boolean esEspacioAbierto(Celda celda, Tablero tablero) {
