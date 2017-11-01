@@ -187,18 +187,17 @@ public class Tablero {
      * @return Copia
      */
     public Tablero generarCopia() {
-        Tablero tablero = new Tablero(obtenerNumeroFilas(), obtenerNumeroColumnas());
+        Tablero copia = new Tablero(obtenerNumeroFilas(), obtenerNumeroColumnas());
         for (Object grupo : grupos)
-            ((Grupo) grupo).generarCopiaEnOtroTablero(tablero);
-        return tablero;
-        // TODO @BUG @PR=7 @FWMBR method generarCopia() doesn't duplicate groups.
+            ((Grupo) grupo).generarCopiaEnOtroTablero(copia);
+        return copia;
     }
 
     /**
      * Devuelve todos los grupos del jugador
      *
      * @param jugador Jugador a ser consultados
-     * @return Lista de listas de celdas que pertenecen a un mismo grupo.
+     * @return Lista de grupos que pertenecen al jugador.
      */
     public ArrayList obtenerGruposDelJugador(Jugador jugador) {
         ArrayList gruposDelJugador = new ArrayList();
@@ -215,17 +214,7 @@ public class Tablero {
      * @return String del objeto
      */
     public String toString() {
-        String salida = "Tablero: \n";
-        for (int i = 0; i < obtenerNumeroFilas(); i++) {
-            for (int j = 0; j < obtenerNumeroColumnas(); j++) {
-                Celda celda = obtenerCelda(i, j);
-                if (celda.estaVacia())
-                    salida = salida.concat("-");
-                else
-                    salida = salida.concat(String.valueOf(celda.obtenerPiedra().obtenerColor().toChar()));
-            }
-            salida = salida.concat("\n");
-        }
-        return salida;
+        return "Tablero{ tamaño=(" + obtenerNumeroFilas() + "x" + obtenerNumeroColumnas() + "), piedrasBlancas=" +
+                obtenerNumeroPiedras(Color.BLANCO) + ", piedrasNegras=" + obtenerNumeroPiedras(Color.NEGRO) + " }";
     }
 }

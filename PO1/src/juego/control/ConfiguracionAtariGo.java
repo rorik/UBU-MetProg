@@ -9,7 +9,7 @@ package juego.control;
 public class ConfiguracionAtariGo {
     public static final int TAMAÑO_POR_DEFECTO = 9;
     private static final int[] TAMANAÑOS = {9, 13, 19};
-    public static final char LETRA_NO_UTILIZADA = '|';
+    public static final char LETRA_NO_UTILIZADA = 'I';
 
     /**
      * Constructor privado vacío de clase estática.

@@ -21,7 +21,7 @@ class GrupoTest {
 
     @Test
     void obtenerColor() {
-        Tablero tablero = new Tablero(1,2);
+        Tablero tablero = new Tablero(1,3);
         Jugador jugador = new Jugador("", Color.BLANCO);
         tablero.colocar(jugador.generarPiedra(), tablero.obtenerCelda(0,0));
         Grupo grupo = (Grupo) tablero.obtenerGruposDelJugador(jugador).get(0);
@@ -29,6 +29,7 @@ class GrupoTest {
         assertNull(new Grupo(tablero.obtenerCelda(0,1), tablero).obtenerColor());
         tablero.colocar(new Piedra(Color.NEGRO), tablero.obtenerCelda(0,1));
         assertEquals(Color.NEGRO, new Grupo(tablero.obtenerCelda(0,1), tablero).obtenerColor());
+        assertNull(new Grupo(tablero.obtenerCelda(0,2), tablero).obtenerColor());
     }
 
     @Test
@@ -112,11 +113,6 @@ class GrupoTest {
         assertNotNull(tablero2.obtenerCelda(0,1).obtenerPiedra());
         assertNotNull(tablero2.obtenerCelda(1,0).obtenerPiedra());
         assertNull(tablero2.obtenerCelda(1,1).obtenerPiedra());
-    }
-
-    @Test
-    void testToString() {
-        // TODO @QOL @PR=1 Test toString() method.
     }
 
 }

@@ -13,7 +13,7 @@ public class Grupo {
     private final int id;
     private final Color color;
     private final Tablero tablero;
-    final ArrayList celdas = new ArrayList();
+    private final ArrayList celdas = new ArrayList();
 
     public Grupo(Celda celda, Tablero tablero) {
         this.id = contador++;
@@ -76,7 +76,6 @@ public class Grupo {
             if (celda.tieneIgualesCoordenadas((Celda) celdaComparar))
                 return true;
         return false;
-        //return celdas.contains(celda);
     }
 
     /**
@@ -104,7 +103,7 @@ public class Grupo {
      */
     public Grupo generarCopiaEnOtroTablero(Tablero otroTablero) {
         for (Object celda : celdas)
-            otroTablero.colocar(((Celda) celda).obtenerPiedra(), otroTablero.obtenerCeldaConMismasCoordenadas((Celda) celda));
+            otroTablero.colocar(new Piedra(((Celda) celda).obtenerColorDePiedra()), otroTablero.obtenerCeldaConMismasCoordenadas((Celda) celda));
         Grupo nuevo = new Grupo(otroTablero.obtenerCeldaConMismasCoordenadas((Celda) celdas.get(0)), otroTablero);
         for (int i = 1; i < obtenerTamaño(); i++) {
             nuevo.añadirCeldas(new Grupo(otroTablero.obtenerCeldaConMismasCoordenadas((Celda) celdas.get(i)), otroTablero));
@@ -118,7 +117,6 @@ public class Grupo {
      * @return String del objeto.
      */
     public String toString() {
-        // TODO @QOL @PR=1 Create toString() method.
-        return "TODO";
+        return "Grupo(" + obtenerId() + ")" + "{ tamaño=" + obtenerTamaño() + ", color=" + obtenerColor() + " }";
     }
 }

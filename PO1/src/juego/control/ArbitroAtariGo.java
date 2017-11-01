@@ -1,6 +1,9 @@
 package juego.control;
 
 import juego.modelo.*;
+import juego.util.Sentido;
+
+import java.util.ArrayList;
 
 /**
  * Arbitro del juego.
@@ -13,9 +16,13 @@ public class ArbitroAtariGo {
     private boolean turno = false;
     private final Jugador[] jugadores = new Jugador[2];
 
+    /**
+     * Constructor del arbitro.
+     *
+     * @param tablero Tablero del juego.
+     */
     public ArbitroAtariGo(Tablero tablero) {
         this.tablero = tablero;
-        // TODO @FWMBR
     }
 
     /**
@@ -26,7 +33,10 @@ public class ArbitroAtariGo {
      */
     public void registrarJugadoresEnOrden(String nombre) {
         for (int i = 0; i < 2; i++)
-            if (jugadores[i] == null) jugadores[i] = new Jugador(nombre, new Color[]{Color.NEGRO, Color.BLANCO}[i]);
+            if (jugadores[i] == null) {
+                jugadores[i] = new Jugador(nombre, new Color[]{Color.NEGRO, Color.BLANCO}[i]);
+                break;
+            }
     }
 
     /**
@@ -80,23 +90,73 @@ public class ArbitroAtariGo {
     public Jugador obtenerGanador() {
         for (int i = 0; i < jugadores.length; i++) {
             boolean puedeRealizarMovimientos = false;
-            for (Object grupo : tablero.obtenerGruposDelJugador(jugadores[i]))
-                if (!((Grupo) grupo).estaVivo()) puedeRealizarMovimientos = true;
-            if (!puedeRealizarMovimientos) return jugadores[++i%2];
+            ArrayList grupos = tablero.obtenerGruposDelJugador(jugadores[i]);
+            for (Object grupo : grupos) {
+                if (((Grupo) grupo).estaVivo()) puedeRealizarMovimientos = true;
+            }
+            if (!puedeRealizarMovimientos && (tablero.estaCompleto() || grupos.size() > 0))
+                return jugadores[++i % 2];
         }
         return null;
+        // @TODO @PR=10 @NEXTVERSION Game stops when a single group is dead.
     }
 
+    /**
+     * Ejecuta una jugada y cambia de turno.
+     *
+     * @param celda Celda en la que realizar jugada.
+     */
     public void jugar(Celda celda) {
         tablero.colocar(obtenerJugadorConTurno().generarPiedra(), celda);
         cambiarTurno();
-        // TODO @MAJOR @PR=8 Finish jugar() method.
     }
 
+    /**
+     * Comprueba si un movimiento es legal. Comprobando que la celda
+     * esté vacía y que el movimiento no resulte en perdida para el jugador.
+     *
+     * @param celda Celda a ser comprobada.
+     * @return <code>true</code> si se puede realizar,
+     * <code>false</code> en caso contrario.
+     */
     public boolean esMovimientoLegal(Celda celda) {
         if (!celda.estaVacia()) return false;
-        // TODO @MAJOR @PR=8 Finish esMovimientoLegal() method.
-        return true;
+        ArbitroAtariGo copia = new ArbitroAtariGo(tablero.generarCopia());
+        for (Jugador jugador : jugadores)
+            copia.registrarJugadoresEnOrden(jugador.obtenerNombre());
+        if (turno) copia.cambiarTurno();
+        copia.jugar(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda));
+        return esEspacioAbierto(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda), copia.obtenerTablero());
+    }
+
+    private boolean esEspacioAbierto(Celda celda, Tablero tablero) {
+        ArrayList paredes = new ArrayList();
+        agruparAdyacentes(new Grupo(celda, tablero), celda, tablero, paredes);
+        return paredes.contains(Sentido.NORTE) && paredes.contains(Sentido.SUR) ||
+                paredes.contains(Sentido.OESTE) && paredes.contains(Sentido.ESTE);
+    }
+
+    private void agruparAdyacentes(Grupo grupo, Celda celda, Tablero tablero, ArrayList paredes) {
+        if (celda.obtenerFila() == 0 && !paredes.contains(Sentido.NORTE))
+            paredes.add(Sentido.NORTE);
+        else if (celda.obtenerFila() == tablero.obtenerNumeroFilas() - 1 && !paredes.contains(Sentido.SUR))
+            paredes.add(Sentido.SUR);
+        if (celda.obtenerColumna() == 0 && !paredes.contains(Sentido.OESTE))
+            paredes.add(Sentido.OESTE);
+        else if (celda.obtenerColumna() == tablero.obtenerNumeroColumnas() - 1 && !paredes.contains(Sentido.ESTE))
+            paredes.add(Sentido.ESTE);
+        for (Object celdaAdyacente : tablero.obtenerCeldasAdyacentes(celda)) {
+            if (agruparCeldaAdyacente(grupo, (Celda) celdaAdyacente, tablero))
+                agruparAdyacentes(grupo, (Celda) celdaAdyacente, tablero, paredes);
+        }
+    }
+
+    private boolean agruparCeldaAdyacente(Grupo grupo, Celda celda, Tablero tablero) {
+        if ((celda.estaVacia() || celda.obtenerColorDePiedra() == grupo.obtenerColor()) && !grupo.contiene(celda)) {
+            grupo.añadirCeldas(new Grupo(celda, tablero));
+            return true;
+        }
+        return false;
     }
 
 }

@@ -115,10 +115,10 @@ class TableroTest {
         Tablero copia = tablero.generarCopia();
         assertEquals(2, copia.obtenerNumeroFilas());
         assertEquals(5, copia.obtenerNumeroColumnas());
-        assertEquals(piedra, copia.obtenerCelda(1,3).obtenerPiedra());
+        assertNotEquals(piedra, copia.obtenerCelda(1,3).obtenerPiedra());
+        assertEquals(piedra.obtenerColor(), copia.obtenerCelda(1,3).obtenerPiedra().obtenerColor());
         assertNull(copia.obtenerCelda(0,0).obtenerPiedra());
         assertEquals(tablero.obtenerNumeroPiedras(Color.BLANCO), copia.obtenerNumeroPiedras(Color.BLANCO));
-        // TODO @QOL @PR=1 @FWMBR Test generarCopia() method.
     }
 
     @Test
@@ -138,11 +138,6 @@ class TableroTest {
         assertEquals(2, tablero.obtenerGruposDelJugador(jugadorBlanco).size());
         tablero.colocar(jugadorBlanco.generarPiedra(), tablero.obtenerCelda(0, 1));
         assertEquals(1, tablero.obtenerGruposDelJugador(jugadorBlanco).size());
-    }
-
-    @Test
-    void testToString() {
-        // TODO @QOL @PR=1 Test toString() method.
     }
 
 }
