@@ -88,11 +88,12 @@ public class ArbitroAtariGo {
      * @return Jugador ganador o <code>null</code> si no ha acabado el juego.
      */
     public Jugador obtenerGanador() {
-        for (int i = 0; i < jugadores.length; i++) {
-            ArrayList grupos = tablero.obtenerGruposDelJugador(jugadores[i]);
-            for (Object grupo : grupos)
-                if (!((Grupo) grupo).estaVivo()) return jugadores[++i % 2];
-        }
+        ArrayList grupos = tablero.obtenerGruposDelJugador(obtenerJugadorSinTurno());
+        for (Object grupo : grupos)
+            if (!((Grupo) grupo).estaVivo()) return obtenerJugadorConTurno();
+        grupos = tablero.obtenerGruposDelJugador(obtenerJugadorConTurno());
+        for (Object grupo : grupos)
+            if (!((Grupo) grupo).estaVivo()) return obtenerJugadorSinTurno();
         return null;
     }
 
@@ -121,8 +122,17 @@ public class ArbitroAtariGo {
             copia.registrarJugadoresEnOrden(jugador.obtenerNombre());
         if (turno) copia.cambiarTurno();
         copia.jugar(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda));
-        return esEspacioAbierto(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda), copia.obtenerTablero());
-        // TODO @MAJOR @PR=9 @NEXTVERSION Allow placing inside empty space if there's a possibility of winning/losing.
+        if (esEspacioAbierto(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda), copia.obtenerTablero()))
+            return true;
+        else {
+            copia.jugar(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda));
+            boolean b = (!copia.estaAcabado() || copia.obtenerGanador().obtenerColor() != obtenerJugadorConTurno().obtenerColor());
+            b = b && !esEspacioAbierto(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda), copia.obtenerTablero());
+            return b;
+            // TODO @BUG @NEXTVERSION @PR=20 Doesn't work when checking winning inner cell. (See JuegoTest.innerLock()).
+            /*boolean b = (!copia.estaAcabado() || copia.obtenerGanador().obtenerColor() == obtenerJugadorConTurno().obtenerColor())
+                    && !esEspacioAbierto(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda), copia.obtenerTablero());*/
+        }
     }
 
     private boolean esEspacioAbierto(Celda celda, Tablero tablero) {

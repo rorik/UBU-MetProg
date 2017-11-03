@@ -13,7 +13,7 @@ public class Grupo {
     private final int id;
     private final Color color;
     private final Tablero tablero;
-    private final ArrayList celdas = new ArrayList();
+    public final ArrayList celdas = new ArrayList();
 
     public Grupo(Celda celda, Tablero tablero) {
         this.id = contador++;
@@ -117,6 +117,6 @@ public class Grupo {
      * @return String del objeto.
      */
     public String toString() {
-        return "Grupo(" + obtenerId() + ")" + "{ tamaño=" + obtenerTamaño() + ", color=" + obtenerColor() + " }";
+        return "Grupo(" + obtenerId() + ")" + "{ tamaño=" + obtenerTamaño() + ", color=" + obtenerColor() + ", vivo=" + (estaVivo()?"true":"false") +" }";
     }
 }
