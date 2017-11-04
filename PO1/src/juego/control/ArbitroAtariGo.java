@@ -1,7 +1,6 @@
 package juego.control;
 
 import juego.modelo.*;
-import juego.util.Sentido;
 
 import java.util.ArrayList;
 
@@ -88,12 +87,12 @@ public class ArbitroAtariGo {
      * @return Jugador ganador o <code>null</code> si no ha acabado el juego.
      */
     public Jugador obtenerGanador() {
-        ArrayList grupos = tablero.obtenerGruposDelJugador(obtenerJugadorSinTurno());
-        for (Object grupo : grupos)
-            if (!((Grupo) grupo).estaVivo()) return obtenerJugadorConTurno();
-        grupos = tablero.obtenerGruposDelJugador(obtenerJugadorConTurno());
+        ArrayList grupos = tablero.obtenerGruposDelJugador(obtenerJugadorConTurno());
         for (Object grupo : grupos)
             if (!((Grupo) grupo).estaVivo()) return obtenerJugadorSinTurno();
+        grupos = tablero.obtenerGruposDelJugador(obtenerJugadorSinTurno());
+        for (Object grupo : grupos)
+            if (!((Grupo) grupo).estaVivo()) return obtenerJugadorConTurno();
         return null;
     }
 
@@ -122,47 +121,7 @@ public class ArbitroAtariGo {
             copia.registrarJugadoresEnOrden(jugador.obtenerNombre());
         if (turno) copia.cambiarTurno();
         copia.jugar(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda));
-        if (esEspacioAbierto(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda), copia.obtenerTablero()))
-            return true;
-        else {
-            copia.jugar(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda));
-            boolean b = (!copia.estaAcabado() || copia.obtenerGanador().obtenerColor() != obtenerJugadorConTurno().obtenerColor());
-            b = b && !esEspacioAbierto(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda), copia.obtenerTablero());
-            return b;
-            // TODO @BUG @NEXTVERSION @PR=20 Doesn't work when checking winning inner cell. (See JuegoTest.innerLock()).
-            /*boolean b = (!copia.estaAcabado() || copia.obtenerGanador().obtenerColor() == obtenerJugadorConTurno().obtenerColor())
-                    && !esEspacioAbierto(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda), copia.obtenerTablero());*/
-        }
-    }
-
-    private boolean esEspacioAbierto(Celda celda, Tablero tablero) {
-        ArrayList paredes = new ArrayList();
-        agruparAdyacentes(new Grupo(celda, tablero), celda, tablero, paredes);
-        return paredes.contains(Sentido.NORTE) && paredes.contains(Sentido.SUR) ||
-                paredes.contains(Sentido.OESTE) && paredes.contains(Sentido.ESTE);
-    }
-
-    private void agruparAdyacentes(Grupo grupo, Celda celda, Tablero tablero, ArrayList paredes) {
-        if (celda.obtenerFila() == 0 && !paredes.contains(Sentido.NORTE))
-            paredes.add(Sentido.NORTE);
-        else if (celda.obtenerFila() == tablero.obtenerNumeroFilas() - 1 && !paredes.contains(Sentido.SUR))
-            paredes.add(Sentido.SUR);
-        if (celda.obtenerColumna() == 0 && !paredes.contains(Sentido.OESTE))
-            paredes.add(Sentido.OESTE);
-        else if (celda.obtenerColumna() == tablero.obtenerNumeroColumnas() - 1 && !paredes.contains(Sentido.ESTE))
-            paredes.add(Sentido.ESTE);
-        for (Object celdaAdyacente : tablero.obtenerCeldasAdyacentes(celda)) {
-            if (agruparCeldaAdyacente(grupo, (Celda) celdaAdyacente, tablero))
-                agruparAdyacentes(grupo, (Celda) celdaAdyacente, tablero, paredes);
-        }
-    }
-
-    private boolean agruparCeldaAdyacente(Grupo grupo, Celda celda, Tablero tablero) {
-        if ((celda.estaVacia() || celda.obtenerColorDePiedra() == grupo.obtenerColor()) && !grupo.contiene(celda)) {
-            grupo.añadirCeldas(new Grupo(celda, tablero));
-            return true;
-        }
-        return false;
+        return !copia.estaAcabado() || copia.obtenerGanador().obtenerColor() == obtenerJugadorConTurno().obtenerColor();
     }
 
 }

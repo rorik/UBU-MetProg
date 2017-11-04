@@ -37,23 +37,19 @@ public class Tablero {
     public void colocar(Piedra piedra, Celda celda) {
         celda.establecerPiedra(piedra);
         piedra.colocarEn(celda);
+        fusionarGruposAdyacentes(celda);
+    }
+
+    /**
+     * Añade una celda a un nuevo grupo y comprueba si hay grupos adyacentes,
+     * en caso de que haya, agrupa todos en uno solo.
+     *
+     * @param celda Celda a meter en grupo y fusionar.
+     */
+    private void fusionarGruposAdyacentes(Celda celda) {
         Grupo nuevoGrupo = new Grupo(celda, this);
         grupos.add(nuevoGrupo);
-        ArrayList adyacentesDelMismoColor = new ArrayList();
-        for (Object celdaAdyacente : obtenerCeldasAdyacentes(celda)) {
-            if (!((Celda) celdaAdyacente).estaVacia()
-                    && ((Celda) celdaAdyacente).obtenerColorDePiedra() == celda.obtenerColorDePiedra())
-                adyacentesDelMismoColor.add(celdaAdyacente);
-        }
-        ArrayList gruposAdyacentes = new ArrayList();
-        for (Object celdaAdyacente : adyacentesDelMismoColor) {
-            for (Object grupo : grupos) {
-                if (((Grupo) grupo).obtenerColor() == ((Celda) celdaAdyacente).obtenerColorDePiedra() &&
-                        ((Grupo) grupo).contiene((Celda) celdaAdyacente) &&
-                        !gruposAdyacentes.contains(grupo))
-                    gruposAdyacentes.add(grupo);
-            }
-        }
+        ArrayList gruposAdyacentes = obtenerGruposAdyacentes(celda);
         if (gruposAdyacentes.size() > 0) {
             ((Grupo) gruposAdyacentes.get(0)).añadirCeldas(nuevoGrupo);
             grupos.remove(nuevoGrupo);
@@ -62,7 +58,42 @@ public class Tablero {
                 grupos.remove(gruposAdyacentes.get(i));
             }
         }
-        //grupos.stream().filter(Grupo::estaVivo).iterator().forEachRemaining(grupo -> System.out.println(grupo.obtenerId() + " (" + grupo.obtenerColor().toChar() + "): " + grupo.obtenerTamaño()));
+    }
+
+    /**
+     * Obtiene los grupos del mismo jugador que contienen
+     * celdas adyacentes a la celda dada.
+     *
+     * @param celda Celda a la que obtener grupos adyacentes.
+     * @return Lista de grupos adyacentes del mismo color.
+     */
+    private ArrayList obtenerGruposAdyacentes(Celda celda) {
+        ArrayList adyacentesDelMismoColor = obtenerCeldasAdyacentesDelMismoColor(celda);
+        ArrayList gruposAdyacentes = new ArrayList();
+        for (Object celdaAdyacente : adyacentesDelMismoColor)
+            for (Object grupo : grupos)
+                if (((Grupo) grupo).obtenerColor() == ((Celda) celdaAdyacente).obtenerColorDePiedra() &&
+                        ((Grupo) grupo).contiene((Celda) celdaAdyacente) &&
+                        !gruposAdyacentes.contains(grupo))
+                    gruposAdyacentes.add(grupo);
+        return gruposAdyacentes;
+    }
+
+    /**
+     * Obtiene todas las celdas que contengan una piedra del mismo color,
+     * relativo a la celda dada.
+     *
+     * @param celda Celda a la que obtener adyacentes y color.
+     * @return Lista de celdas adyacentes del mismo color.
+     */
+    private ArrayList obtenerCeldasAdyacentesDelMismoColor(Celda celda) {
+        ArrayList adyacentesDelMismoColor = new ArrayList();
+        for (Object celdaAdyacente : obtenerCeldasAdyacentes(celda)) {
+            if (!((Celda) celdaAdyacente).estaVacia()
+                    && ((Celda) celdaAdyacente).obtenerColorDePiedra() == celda.obtenerColorDePiedra())
+                adyacentesDelMismoColor.add(celdaAdyacente);
+        }
+        return adyacentesDelMismoColor;
     }
 
     /**

@@ -92,7 +92,7 @@ class ArbitroTest {
     }
 
     @Test
-    void esMovimientoLegalSuicida() {
+    void esMovimientoLegalSuicida1() {
         Tablero tablero = new Tablero(2,3);
         ArbitroAtariGo arbitro = new ArbitroAtariGo(tablero);
         arbitro.registrarJugadoresEnOrden("a");
@@ -114,11 +114,15 @@ class ArbitroTest {
         tablero.colocar(arbitro.obtenerJugadorConTurno().generarPiedra(), tablero.obtenerCelda(0,0));
         tablero.colocar(arbitro.obtenerJugadorConTurno().generarPiedra(), tablero.obtenerCelda(1,1));
         tablero.colocar(arbitro.obtenerJugadorConTurno().generarPiedra(), tablero.obtenerCelda(1,2));
-        arbitro.jugar(tablero.obtenerCelda(1,3));
-        assertFalse(arbitro.esMovimientoLegal(tablero.obtenerCelda(0,1)));
-        assertFalse(arbitro.esMovimientoLegal(tablero.obtenerCelda(0,2)));
+        arbitro.jugar(tablero.obtenerCelda(0,3));
+        assertTrue(arbitro.esMovimientoLegal(tablero.obtenerCelda(0,1)));
+        assertTrue(arbitro.esMovimientoLegal(tablero.obtenerCelda(0,2)));
         arbitro.cambiarTurno();
         assertTrue(arbitro.esMovimientoLegal(tablero.obtenerCelda(0,1)));
+        arbitro.cambiarTurno();
+        arbitro.jugar(tablero.obtenerCelda(0, 1));
+        arbitro.cambiarTurno();
+        assertFalse(arbitro.esMovimientoLegal(tablero.obtenerCelda(0,2)));
     }
 
     @Test
@@ -136,34 +140,12 @@ class ArbitroTest {
         tablero.colocar(arbitro.obtenerJugadorConTurno().generarPiedra(), tablero.obtenerCelda(3,1));
         arbitro.jugar(tablero.obtenerCelda(3,2));
         assertTrue(arbitro.esMovimientoLegal(tablero.obtenerCelda(0,3)));
-        assertFalse(arbitro.esMovimientoLegal(tablero.obtenerCelda(1,2)));
-        arbitro.cambiarTurno();
         assertTrue(arbitro.esMovimientoLegal(tablero.obtenerCelda(1,2)));
-    }
-
-    @Test
-    void esMovimientoLegalSuicida4() {
-        Tablero tablero = new Tablero(5,6);
-        ArbitroAtariGo arbitro = new ArbitroAtariGo(tablero);
-        arbitro.registrarJugadoresEnOrden("a");
-        arbitro.registrarJugadoresEnOrden("b");
-        tablero.colocar(arbitro.obtenerJugadorConTurno().generarPiedra(), tablero.obtenerCelda(2,0));
-        tablero.colocar(arbitro.obtenerJugadorConTurno().generarPiedra(), tablero.obtenerCelda(2,1));
-        tablero.colocar(arbitro.obtenerJugadorConTurno().generarPiedra(), tablero.obtenerCelda(2,2));
-        tablero.colocar(arbitro.obtenerJugadorConTurno().generarPiedra(), tablero.obtenerCelda(3,3));
-        tablero.colocar(arbitro.obtenerJugadorConTurno().generarPiedra(), tablero.obtenerCelda(4,3));
+        arbitro.jugar(tablero.obtenerCelda(2, 2));
+        arbitro.jugar(tablero.obtenerCelda(1, 2));
+        assertFalse(arbitro.esMovimientoLegal(tablero.obtenerCelda(2,1)));
         arbitro.cambiarTurno();
-        assertFalse(arbitro.esMovimientoLegal(tablero.obtenerCelda(3,0)));
-        tablero.colocar(arbitro.obtenerJugadorConTurno().generarPiedra(), tablero.obtenerCelda(1,0));
-        tablero.colocar(arbitro.obtenerJugadorConTurno().generarPiedra(), tablero.obtenerCelda(1,1));
-        tablero.colocar(arbitro.obtenerJugadorConTurno().generarPiedra(), tablero.obtenerCelda(1,2));
-        tablero.colocar(arbitro.obtenerJugadorConTurno().generarPiedra(), tablero.obtenerCelda(2,3));
-        tablero.colocar(arbitro.obtenerJugadorConTurno().generarPiedra(), tablero.obtenerCelda(3,4));
-        tablero.colocar(arbitro.obtenerJugadorConTurno().generarPiedra(), tablero.obtenerCelda(4,4));
-        assertTrue(arbitro.esMovimientoLegal(tablero.obtenerCelda(3,0)));
-        arbitro.cambiarTurno();
-        assertTrue(arbitro.esMovimientoLegal(tablero.obtenerCelda(3,0)));
-        assertTrue(arbitro.esMovimientoLegal(tablero.obtenerCelda(4,1)));
+        assertTrue(arbitro.esMovimientoLegal(tablero.obtenerCelda(2,1)));
     }
 
 }

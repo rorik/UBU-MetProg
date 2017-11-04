@@ -10,17 +10,16 @@ import java.util.ArrayList;
  */
 public class Grupo {
     private static int contador = 0;
-    private final int id;
-    private final Color color;
-    private final Tablero tablero;
-    public final ArrayList celdas = new ArrayList();
+    private int id;
+    private Color color;
+    private Tablero tablero;
+    private ArrayList celdas = new ArrayList();
 
     public Grupo(Celda celda, Tablero tablero) {
         this.id = contador++;
         this.color = celda.obtenerPiedra() == null ? null : celda.obtenerPiedra().obtenerColor();
         this.tablero = tablero;
         celdas.add(celda);
-        // TODO @FWMBR contador counts testing groups.
     }
 
     /**
@@ -117,6 +116,6 @@ public class Grupo {
      * @return String del objeto.
      */
     public String toString() {
-        return "Grupo(" + obtenerId() + ")" + "{ tamaño=" + obtenerTamaño() + ", color=" + obtenerColor() + ", vivo=" + (estaVivo()?"true":"false") +" }";
+        return "Grupo(" + obtenerId() + ")" + "{ tamaño=" + obtenerTamaño() + ", color=" + obtenerColor() + ", vivo=" + (estaVivo() ? "true" : "false") + " }";
     }
 }

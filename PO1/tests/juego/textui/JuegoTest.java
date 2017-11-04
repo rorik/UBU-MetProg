@@ -16,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class JuegoTest {
     @Test
-    void tripleLock1() {
-        ArbitroAtariGo arbitro = tripleLock9x9();
+    void doubleLock1() {
+        ArbitroAtariGo arbitro = doubleLock9x9();
         assertJugada(arbitro, 0,1);
         assertJugada(arbitro, 8,0, false);
         assertJugada(arbitro, 8,5);
@@ -26,9 +26,10 @@ class JuegoTest {
     }
 
     @Test
-    void tripleLock2() {
-        ArbitroAtariGo arbitro = tripleLock9x9();
-        assertJugada(arbitro, 0,1);
+    void doubleLock2() {
+        ArbitroAtariGo arbitro = doubleLock9x9();
+        assertJugada(arbitro, 8,0);
+        assertEquals("Bob", arbitro.obtenerGanador().obtenerNombre());
     }
 
     @Test
@@ -36,14 +37,12 @@ class JuegoTest {
         ArbitroAtariGo arbitro = innerLock9x9();
         assertJugada(arbitro, 5,3, false);
         assertJugada(arbitro, 1,1);
-        printTablero(arbitro);
         assertJugada(arbitro, 5,3);
-        assertJugada(arbitro, 1,6);
         assertTrue(arbitro.estaAcabado());
         assertEquals("Bob", arbitro.obtenerGanador().obtenerNombre());
     }
 
-    private ArbitroAtariGo tripleLock9x9() {
+    private ArbitroAtariGo doubleLock9x9() {
         ArbitroAtariGo arbitro = new ArbitroAtariGo(new Tablero(9,9));
         arbitro.registrarJugadoresEnOrden("Alice");
         arbitro.registrarJugadoresEnOrden("Bob");
@@ -128,6 +127,9 @@ class JuegoTest {
             System.out.println(salida);
             salida = "";
         }
-        System.out.println(":: " + arbitro.obtenerJugadorConTurno().obtenerColor().toChar() + " ::");
+        if (arbitro.estaAcabado())
+            System.out.println(">> " + arbitro.obtenerGanador().obtenerColor().toChar() + " <<");
+        else
+            System.out.println(":: " + arbitro.obtenerJugadorConTurno().obtenerColor().toChar() + " ::");
     }
 }
