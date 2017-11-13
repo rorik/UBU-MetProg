@@ -11,13 +11,13 @@ import java.util.ArrayList;
 public class Grupo {
     private static int contador = 0;
     private int id;
-    private Color color;
+    //private Color color;
     private Tablero tablero;
     private ArrayList celdas = new ArrayList();
 
     public Grupo(Celda celda, Tablero tablero) {
         this.id = contador++;
-        this.color = celda.obtenerPiedra() == null ? null : celda.obtenerPiedra().obtenerColor();
+        //this.color = celda.obtenerPiedra() == null ? null : celda.obtenerPiedra().obtenerColor();
         this.tablero = tablero;
         celdas.add(celda);
     }
@@ -38,7 +38,8 @@ public class Grupo {
      * @return color del grupo o null
      */
     public Color obtenerColor() {
-        return color;
+        return ((Celda) celdas.get(0)).obtenerPiedra() == null ? null : ((Celda) celdas.get(0)).obtenerColorDePiedra();
+        //return color;
     }
 
     /**

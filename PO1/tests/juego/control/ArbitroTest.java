@@ -24,6 +24,9 @@ class ArbitroTest {
         assertEquals(Color.NEGRO, arbitro.obtenerJugadorConTurno().obtenerColor());
         assertEquals("jugador2", arbitro.obtenerJugadorSinTurno().obtenerNombre());
         assertEquals(Color.BLANCO, arbitro.obtenerJugadorSinTurno().obtenerColor());
+        arbitro.registrarJugadoresEnOrden("jugador3");
+        assertEquals("jugador1", arbitro.obtenerJugadorConTurno().obtenerNombre());
+        assertEquals("jugador2", arbitro.obtenerJugadorSinTurno().obtenerNombre());
 }
 
     @Test

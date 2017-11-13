@@ -40,7 +40,7 @@ class CeldaTest {
     @Test
     void obtenerColorDePiedraNull() {
         Celda celda = new Celda(10, 10);
-        assertThrows(AssertionError.class, celda::obtenerColorDePiedra);
+        assertNull(celda.obtenerColorDePiedra());
     }
 
     @Test

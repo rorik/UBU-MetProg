@@ -25,3 +25,6 @@ hs_err_pid*
 /PO1/doc/
 /PO1/.idea/
 /PO1/out/
+/PO1/bin/
+/PO1/doccheck/
+/PO1/rsc/

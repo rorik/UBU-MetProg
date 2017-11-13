@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class Tablero {
-    private Celda[][] matriz;
+    private Celda[][] celdas;
     private final ArrayList grupos = new ArrayList();
 
     /**
@@ -22,10 +22,10 @@ public class Tablero {
      */
     public Tablero(int filas, int columnas) {
         assert filas > 0 && columnas > 0;
-        matriz = new Celda[filas][columnas];
+        celdas = new Celda[filas][columnas];
         for (int i = 0; i < filas; i++)
             for (int j = 0; j < columnas; j++)
-                matriz[i][j] = new Celda(i, j);
+                celdas[i][j] = new Celda(i, j);
     }
 
     /**
@@ -106,7 +106,7 @@ public class Tablero {
      */
     public Celda obtenerCelda(int fila, int columna) {
         if (estaEnTablero(fila, columna))
-            return matriz[fila][columna];
+            return celdas[fila][columna];
         return null;
     }
 
@@ -119,7 +119,7 @@ public class Tablero {
      */
     public Celda obtenerCeldaConMismasCoordenadas(Celda celda) {
         if (estaEnTablero(celda.obtenerFila(), celda.obtenerColumna()))
-            return matriz[celda.obtenerFila()][celda.obtenerColumna()];
+            return celdas[celda.obtenerFila()][celda.obtenerColumna()];
         return null;
     }
 
@@ -145,7 +145,7 @@ public class Tablero {
         int cuenta = 0;
         for (int i = 0; i < obtenerNumeroFilas(); i++)
             for (int j = 0; j < obtenerNumeroColumnas(); j++)
-                if (!obtenerCelda(i, j).estaVacia() && matriz[i][j].obtenerPiedra().obtenerColor() == color)
+                if (!obtenerCelda(i, j).estaVacia() && obtenerCelda(i, j).obtenerPiedra().obtenerColor() == color)
                     cuenta++;
         return cuenta;
     }
@@ -156,7 +156,7 @@ public class Tablero {
      * @return número de filas
      */
     public int obtenerNumeroFilas() {
-        return this.matriz.length;
+        return this.celdas.length;
     }
 
     /**
@@ -165,7 +165,7 @@ public class Tablero {
      * @return número de columnas
      */
     public int obtenerNumeroColumnas() {
-        return this.matriz[0].length;
+        return this.celdas[0].length;
     }
 
     /**
