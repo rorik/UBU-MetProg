@@ -23,9 +23,11 @@ public class Tablero {
     public Tablero(int filas, int columnas) {
         assert filas > 0 && columnas > 0;
         celdas = new Celda[filas][columnas];
-        for (int i = 0; i < filas; i++)
-            for (int j = 0; j < columnas; j++)
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
                 celdas[i][j] = new Celda(i, j);
+            }
+        }
     }
 
     /**
@@ -70,12 +72,15 @@ public class Tablero {
     private ArrayList obtenerGruposAdyacentes(Celda celda) {
         ArrayList adyacentesDelMismoColor = obtenerCeldasAdyacentesDelMismoColor(celda);
         ArrayList gruposAdyacentes = new ArrayList();
-        for (Object celdaAdyacente : adyacentesDelMismoColor)
-            for (Object grupo : grupos)
+        for (Object celdaAdyacente : adyacentesDelMismoColor) {
+            for (Object grupo : grupos) {
                 if (((Grupo) grupo).obtenerColor() == ((Celda) celdaAdyacente).obtenerColorDePiedra() &&
                         ((Grupo) grupo).contiene((Celda) celdaAdyacente) &&
-                        !gruposAdyacentes.contains(grupo))
+                        !gruposAdyacentes.contains(grupo)) {
                     gruposAdyacentes.add(grupo);
+                }
+            }
+        }
         return gruposAdyacentes;
     }
 
@@ -90,8 +95,9 @@ public class Tablero {
         ArrayList adyacentesDelMismoColor = new ArrayList();
         for (Object celdaAdyacente : obtenerCeldasAdyacentes(celda)) {
             if (!((Celda) celdaAdyacente).estaVacia()
-                    && ((Celda) celdaAdyacente).obtenerColorDePiedra() == celda.obtenerColorDePiedra())
+                    && ((Celda) celdaAdyacente).obtenerColorDePiedra() == celda.obtenerColorDePiedra()) {
                 adyacentesDelMismoColor.add(celdaAdyacente);
+            }
         }
         return adyacentesDelMismoColor;
     }
@@ -105,9 +111,7 @@ public class Tablero {
      * null en caso de que se salga de los límites
      */
     public Celda obtenerCelda(int fila, int columna) {
-        if (estaEnTablero(fila, columna))
-            return celdas[fila][columna];
-        return null;
+        return estaEnTablero(fila, columna) ? celdas[fila][columna] : null;
     }
 
     /**
@@ -118,8 +122,9 @@ public class Tablero {
      * null en caso de que se salga de los límites
      */
     public Celda obtenerCeldaConMismasCoordenadas(Celda celda) {
-        if (estaEnTablero(celda.obtenerFila(), celda.obtenerColumna()))
+        if (estaEnTablero(celda.obtenerFila(), celda.obtenerColumna())) {
             return celdas[celda.obtenerFila()][celda.obtenerColumna()];
+        }
         return null;
     }
 
@@ -143,10 +148,13 @@ public class Tablero {
      */
     public int obtenerNumeroPiedras(Color color) {
         int cuenta = 0;
-        for (int i = 0; i < obtenerNumeroFilas(); i++)
-            for (int j = 0; j < obtenerNumeroColumnas(); j++)
-                if (!obtenerCelda(i, j).estaVacia() && obtenerCelda(i, j).obtenerPiedra().obtenerColor() == color)
+        for (int i = 0; i < obtenerNumeroFilas(); i++) {
+            for (int j = 0; j < obtenerNumeroColumnas(); j++) {
+                if (!obtenerCelda(i, j).estaVacia() && obtenerCelda(i, j).obtenerPiedra().obtenerColor() == color) {
                     cuenta++;
+                }
+            }
+        }
         return cuenta;
     }
 
@@ -174,10 +182,13 @@ public class Tablero {
      * @return verdadero si esta completo, falso en caso contrario
      */
     public boolean estaCompleto() {
-        for (int i = 0; i < obtenerNumeroFilas(); i++)
-            for (int j = 0; j < obtenerNumeroColumnas(); j++)
-                if (obtenerCelda(i, j).estaVacia())
+        for (int i = 0; i < obtenerNumeroFilas(); i++) {
+            for (int j = 0; j < obtenerNumeroColumnas(); j++) {
+                if (obtenerCelda(i, j).estaVacia()) {
                     return false;
+                }
+            }
+        }
         return true;
     }
 
@@ -192,7 +203,9 @@ public class Tablero {
         for (Sentido sentido : Sentido.values()) {
             int fila = celda.obtenerFila() + sentido.obtenerDesplazamientoHorizontal();
             int columna = celda.obtenerColumna() + sentido.obtenerDesplazamientoVertical();
-            if (estaEnTablero(fila, columna)) celdas.add(obtenerCelda(fila, columna));
+            if (estaEnTablero(fila, columna)) {
+                celdas.add(obtenerCelda(fila, columna));
+            }
         }
         return celdas;
     }
@@ -206,8 +219,9 @@ public class Tablero {
     public int obtenerGradosDeLibertad(Celda celda) {
         int gradosDeLibertad = 0;
         for (Object celdasAdyacente : obtenerCeldasAdyacentes(celda)) {
-            if (((Celda) celdasAdyacente).estaVacia())
+            if (((Celda) celdasAdyacente).estaVacia()) {
                 gradosDeLibertad++;
+            }
         }
         return gradosDeLibertad;
     }
@@ -219,8 +233,9 @@ public class Tablero {
      */
     public Tablero generarCopia() {
         Tablero copia = new Tablero(obtenerNumeroFilas(), obtenerNumeroColumnas());
-        for (Object grupo : grupos)
+        for (Object grupo : grupos) {
             ((Grupo) grupo).generarCopiaEnOtroTablero(copia);
+        }
         return copia;
     }
 
@@ -232,9 +247,11 @@ public class Tablero {
      */
     public ArrayList obtenerGruposDelJugador(Jugador jugador) {
         ArrayList gruposDelJugador = new ArrayList();
-        for (Object grupo : grupos)
-            if (((Grupo) grupo).obtenerColor() == jugador.obtenerColor())
+        for (Object grupo : grupos) {
+            if (((Grupo) grupo).obtenerColor() == jugador.obtenerColor()) {
                 gruposDelJugador.add(grupo);
+            }
+        }
         return gruposDelJugador;
     }
 

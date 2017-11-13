@@ -11,13 +11,11 @@ import java.util.ArrayList;
 public class Grupo {
     private static int contador = 0;
     private int id;
-    //private Color color;
     private Tablero tablero;
     private ArrayList celdas = new ArrayList();
 
     public Grupo(Celda celda, Tablero tablero) {
         this.id = contador++;
-        //this.color = celda.obtenerPiedra() == null ? null : celda.obtenerPiedra().obtenerColor();
         this.tablero = tablero;
         celdas.add(celda);
     }
@@ -39,7 +37,6 @@ public class Grupo {
      */
     public Color obtenerColor() {
         return ((Celda) celdas.get(0)).obtenerPiedra() == null ? null : ((Celda) celdas.get(0)).obtenerColorDePiedra();
-        //return color;
     }
 
     /**
@@ -50,8 +47,9 @@ public class Grupo {
      */
     public boolean estaVivo() {
         int gradosDeLibertad = 0;
-        for (Object celda : celdas)
+        for (Object celda : celdas) {
             gradosDeLibertad += tablero.obtenerGradosDeLibertad((Celda) celda);
+        }
         return gradosDeLibertad > 0;
     }
 
@@ -72,9 +70,11 @@ public class Grupo {
      * <code>false</code> si no lo es.
      */
     public boolean contiene(Celda celda) {
-        for (Object celdaComparar : celdas)
-            if (celda.tieneIgualesCoordenadas((Celda) celdaComparar))
+        for (Object celdaComparar : celdas) {
+            if (celda.tieneIgualesCoordenadas((Celda) celdaComparar)) {
                 return true;
+            }
+        }
         return false;
     }
 
@@ -91,8 +91,9 @@ public class Grupo {
      * Elimina todas las piedras del grupo.
      */
     public void eliminarPiedras() {
-        for (Object celda : celdas)
+        for (Object celda : celdas) {
             ((Celda) celda).eliminarPiedra();
+        }
     }
 
     /**
@@ -102,8 +103,9 @@ public class Grupo {
      * @return Grupo equivalente en otroTablero.
      */
     public Grupo generarCopiaEnOtroTablero(Tablero otroTablero) {
-        for (Object celda : celdas)
+        for (Object celda : celdas) {
             otroTablero.colocar(new Piedra(((Celda) celda).obtenerColorDePiedra()), otroTablero.obtenerCeldaConMismasCoordenadas((Celda) celda));
+        }
         Grupo nuevo = new Grupo(otroTablero.obtenerCeldaConMismasCoordenadas((Celda) celdas.get(0)), otroTablero);
         for (int i = 1; i < obtenerTamaño(); i++) {
             nuevo.añadirCeldas(new Grupo(otroTablero.obtenerCeldaConMismasCoordenadas((Celda) celdas.get(i)), otroTablero));

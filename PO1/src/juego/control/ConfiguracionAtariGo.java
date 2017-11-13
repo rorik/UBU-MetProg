@@ -25,9 +25,11 @@ public class ConfiguracionAtariGo {
      */
     public static int obtenerTamañoMaximo() {
         int maximo = 0;
-        for (int tamaño: TAMANAÑOS)
-            if (tamaño > maximo)
+        for (int tamaño: TAMANAÑOS) {
+            if (tamaño > maximo) {
                 maximo = tamaño;
+            }
+        }
         return maximo;
     }
 
@@ -38,9 +40,11 @@ public class ConfiguracionAtariGo {
      * @return <code>true</code> si es válido, si no, <code>false</code>.
      */
     public static boolean esTamañoValido(int tamañoSugerido) {
-        for (int tamaño: TAMANAÑOS)
-            if (tamaño == tamañoSugerido)
+        for (int tamaño: TAMANAÑOS) {
+            if (tamaño == tamañoSugerido) {
                 return true;
+            }
+        }
         return false;
     }
 
@@ -51,8 +55,9 @@ public class ConfiguracionAtariGo {
      */
     public static String generarAyuda() {
         String ayuda = "";
-        for (int tamaño : TAMANAÑOS)
+        for (int tamaño : TAMANAÑOS) {
             ayuda = ayuda.concat(" " + tamaño + ',');
+        }
         return ayuda.substring(0, ayuda.length() - 1).concat(".");
     }
 }

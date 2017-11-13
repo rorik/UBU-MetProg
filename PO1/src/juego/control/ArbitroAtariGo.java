@@ -31,11 +31,12 @@ public class ArbitroAtariGo {
      * @param nombre Nombre del jugador.
      */
     public void registrarJugadoresEnOrden(String nombre) {
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < 2; i++) {
             if (jugadores[i] == null) {
                 jugadores[i] = new Jugador(nombre, new Color[]{Color.NEGRO, Color.BLANCO}[i]);
                 break;
             }
+        }
     }
 
     /**
@@ -88,11 +89,17 @@ public class ArbitroAtariGo {
      */
     public Jugador obtenerGanador() {
         ArrayList grupos = tablero.obtenerGruposDelJugador(obtenerJugadorConTurno());
-        for (Object grupo : grupos)
-            if (!((Grupo) grupo).estaVivo()) return obtenerJugadorSinTurno();
+        for (Object grupo : grupos) {
+            if (!((Grupo) grupo).estaVivo()) {
+                return obtenerJugadorSinTurno();
+            }
+        }
         grupos = tablero.obtenerGruposDelJugador(obtenerJugadorSinTurno());
-        for (Object grupo : grupos)
-            if (!((Grupo) grupo).estaVivo()) return obtenerJugadorConTurno();
+        for (Object grupo : grupos) {
+            if (!((Grupo) grupo).estaVivo()) {
+                return obtenerJugadorConTurno();
+            }
+        }
         return null;
     }
 
@@ -115,11 +122,16 @@ public class ArbitroAtariGo {
      * <code>false</code> en caso contrario.
      */
     public boolean esMovimientoLegal(Celda celda) {
-        if (!celda.estaVacia()) return false;
+        if (!celda.estaVacia()) {
+            return false;
+        }
         ArbitroAtariGo copia = new ArbitroAtariGo(tablero.generarCopia());
-        for (Jugador jugador : jugadores)
+        for (Jugador jugador : jugadores) {
             copia.registrarJugadoresEnOrden(jugador.obtenerNombre());
-        if (turno) copia.cambiarTurno();
+        }
+        if (turno) {
+            copia.cambiarTurno();
+        }
         copia.jugar(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda));
         return !copia.estaAcabado() || copia.obtenerGanador().obtenerColor() == obtenerJugadorConTurno().obtenerColor();
     }

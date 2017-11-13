@@ -40,6 +40,12 @@ public class AtariGo {
             mostrarAyuda();
             args = new String[]{};
         }
+        /*
+          La razón de realizar esta comprobación en el main, a pesar de que
+          se realice en la función inicializarConArgumentos, es que si no
+          se habilitan los asserts (opción por defecto), podemos ejecutar
+          el programa con dimensiones incorrectas.
+         */
         inicializarConArgumentos(args);
         while (!arbitro.estaAcabado()) {
             mostrarTablero(arbitro.obtenerTablero());
