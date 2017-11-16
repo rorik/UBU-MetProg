@@ -105,8 +105,8 @@ public class Tablero {
     /**
      * Obtiene la celda que se encuentra en una determinada posición.
      *
-     * @param fila    Fila.
-     * @param columna Columna.
+     * @param fila    Fila de la celda.
+     * @param columna Columna de la celda.
      * @return devuelve la celda que se encuentre en la posición (fila, columna), o
      * null en caso de que se salga de los límites.
      */

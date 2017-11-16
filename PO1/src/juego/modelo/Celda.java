@@ -32,9 +32,9 @@ public class Celda {
     }
 
     /**
-     * Obtiene el color de una piedra
+     * Obtiene el color de una piedra.
      *
-     * @return Color de la piedra o <code>null</code> si no tiene piedra
+     * @return Color de la piedra o <code>null</code> si no tiene piedra.
      */
     public Color obtenerColorDePiedra() {
         return estaVacia() ? null : piedra.obtenerColor();

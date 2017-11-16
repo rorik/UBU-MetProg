@@ -7,7 +7,13 @@ package juego.modelo;
  * @version 1.0
  */
 public enum Color {
+    /**
+     * Color blanco con representación O.
+     */
     BLANCO('O'),
+    /**
+     * Color negro con representación X.
+     */
     NEGRO('X');
 
     private final char caracter;

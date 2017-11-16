@@ -31,9 +31,9 @@ public class Grupo {
 
     /**
      * Obtiene el color de las piedras del grupo,
-     * o null en caso de que el grupo haya sido capturado
+     * o <code>null</code> en caso de que el grupo haya sido capturado.
      *
-     * @return color del grupo o null
+     * @return color del grupo o <code>null</code> si no tiene piedra.
      */
     public Color obtenerColor() {
         return ((Celda) celdas.get(0)).obtenerPiedra() == null ? null : ((Celda) celdas.get(0)).obtenerColorDePiedra();
