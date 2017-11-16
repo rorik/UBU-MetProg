@@ -18,7 +18,6 @@ public class Celda {
      * @param columna Columna en la que se encuentra.
      */
     public Celda(int fila, int columna) {
-        assert fila >= 0 && columna >= 0;
         this.fila = fila;
         this.columna = columna;
     }

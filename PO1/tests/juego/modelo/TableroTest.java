@@ -45,9 +45,9 @@ class TableroTest {
     @Test
     void estaEnTablero() {
         Tablero tablero = new Tablero(2, 2);
-        assertTrue(tablero.estaEnTablero(0, 0));
-        assertTrue(tablero.estaEnTablero(1, 1));
-        assertFalse(tablero.estaEnTablero(2, 2));
+        assertTrue(tablero.estaEnTablero(new Celda(0,0)));
+        assertTrue(tablero.estaEnTablero((new Celda(1, 1))));
+        assertFalse(tablero.estaEnTablero((new Celda(2, 2))));
     }
 
     @Test

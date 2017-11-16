@@ -13,13 +13,6 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class CeldaTest {
     @Test
-    void constructorNegativo() {
-        assertThrows(AssertionError.class, () -> new Celda(-1, 1));
-        assertThrows(AssertionError.class, () -> new Celda(1, -1));
-        assertThrows(AssertionError.class, () -> new Celda(-8, -9));
-    }
-
-    @Test
     void obtenerPiedra() {
         Celda celda = new Celda(10, 10);
         Piedra piedra = new Piedra(Color.NEGRO);

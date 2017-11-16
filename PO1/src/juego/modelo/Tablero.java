@@ -105,24 +105,24 @@ public class Tablero {
     /**
      * Obtiene la celda que se encuentra en una determinada posición.
      *
-     * @param fila    Fila
-     * @param columna Columna
+     * @param fila    Fila.
+     * @param columna Columna.
      * @return devuelve la celda que se encuentre en la posición (fila, columna), o
-     * null en caso de que se salga de los límites
+     * null en caso de que se salga de los límites.
      */
     public Celda obtenerCelda(int fila, int columna) {
-        return estaEnTablero(fila, columna) ? celdas[fila][columna] : null;
+        return estaEnTablero(new Celda(fila, columna)) ? celdas[fila][columna] : null;
     }
 
     /**
      * Obtiene la celda que se tenga las mismas coordenadas que otra celda.
      *
-     * @param celda celda de la cual conocemos las coordenadas
+     * @param celda celda de la cual conocemos las coordenadas.
      * @return devuelve la celda que se encuentre en la posición (fila, columna), o
-     * null en caso de que se salga de los límites
+     * null en caso de que se salga de los límites.
      */
     public Celda obtenerCeldaConMismasCoordenadas(Celda celda) {
-        if (estaEnTablero(celda.obtenerFila(), celda.obtenerColumna())) {
+        if (estaEnTablero(celda)) {
             return celdas[celda.obtenerFila()][celda.obtenerColumna()];
         }
         return null;
@@ -131,20 +131,20 @@ public class Tablero {
     /**
      * Calcula si una posición está dentro del tablero.
      *
-     * @param fila    Fila
-     * @param columna Columna
+     * @param celda Celda a ser comprobada.
      * @return verdadero en caso de que se encuentre dentro, falso en el caso
-     * contrario
+     * contrario.
      */
-    public boolean estaEnTablero(int fila, int columna) {
-        return fila >= 0 && fila < obtenerNumeroFilas() && columna >= 0 && columna < obtenerNumeroColumnas();
+    public boolean estaEnTablero(Celda celda) {
+        return celda.obtenerFila() >= 0 && celda.obtenerFila() < obtenerNumeroFilas() &&
+                celda.obtenerColumna() >= 0 && celda.obtenerColumna() < obtenerNumeroColumnas();
     }
 
     /**
      * Recorre toda el tablero y cuenta el número de piedras de un determinado color.
      *
-     * @param color Color de las piedras a buscar
-     * @return número de piedras encontradas
+     * @param color Color de las piedras a buscar.
+     * @return número de piedras encontradas.
      */
     public int obtenerNumeroPiedras(Color color) {
         int cuenta = 0;
@@ -161,7 +161,7 @@ public class Tablero {
     /**
      * Devuelve el número de filas.
      *
-     * @return número de filas
+     * @return número de filas.
      */
     public int obtenerNumeroFilas() {
         return this.celdas.length;
@@ -170,7 +170,7 @@ public class Tablero {
     /**
      * Devuelve el número de columnas.
      *
-     * @return número de columnas
+     * @return número de columnas.
      */
     public int obtenerNumeroColumnas() {
         return this.celdas[0].length;
@@ -179,7 +179,7 @@ public class Tablero {
     /**
      * Comprueba si toda el tablero está lleno de piedras.
      *
-     * @return verdadero si esta completo, falso en caso contrario
+     * @return <code>true</code> si esta completo, <code>false</code> en caso contrario.
      */
     public boolean estaCompleto() {
         for (int i = 0; i < obtenerNumeroFilas(); i++) {
@@ -193,17 +193,17 @@ public class Tablero {
     }
 
     /**
-     * Obtiene el grupo de celdas adyacentes
+     * Obtiene el grupo de celdas adyacentes.
      *
-     * @param celda Celda a la que se obtendrá sus adyacentes
-     * @return Grupo de celdas adyacentes
+     * @param celda Celda a la que se obtendrá sus adyacentes.
+     * @return Grupo de celdas adyacentes.
      */
     public ArrayList obtenerCeldasAdyacentes(Celda celda) {
         ArrayList celdas = new ArrayList();
         for (Sentido sentido : Sentido.values()) {
             int fila = celda.obtenerFila() + sentido.obtenerDesplazamientoHorizontal();
             int columna = celda.obtenerColumna() + sentido.obtenerDesplazamientoVertical();
-            if (estaEnTablero(fila, columna)) {
+            if (estaEnTablero(new Celda(fila, columna))) {
                 celdas.add(obtenerCelda(fila, columna));
             }
         }
@@ -211,10 +211,10 @@ public class Tablero {
     }
 
     /**
-     * Obtiene los grados de libertad de una determinada celda
+     * Obtiene los grados de libertad de una determinada celda.
      *
-     * @param celda Celda a ser comprobada
-     * @return Grados de libertad de la celda
+     * @param celda Celda a ser comprobada.
+     * @return Grados de libertad de la celda.
      */
     public int obtenerGradosDeLibertad(Celda celda) {
         int gradosDeLibertad = 0;
@@ -227,9 +227,9 @@ public class Tablero {
     }
 
     /**
-     * Crea una copia del tablero actual
+     * Crea una copia del tablero actual.
      *
-     * @return Copia
+     * @return Copia.
      */
     public Tablero generarCopia() {
         Tablero copia = new Tablero(obtenerNumeroFilas(), obtenerNumeroColumnas());
@@ -240,9 +240,9 @@ public class Tablero {
     }
 
     /**
-     * Devuelve todos los grupos del jugador
+     * Devuelve todos los grupos del jugador.
      *
-     * @param jugador Jugador a ser consultados
+     * @param jugador Jugador a ser consultados.
      * @return Lista de grupos que pertenecen al jugador.
      */
     public ArrayList obtenerGruposDelJugador(Jugador jugador) {
@@ -257,9 +257,9 @@ public class Tablero {
 
 
     /**
-     * Información del objeto en String
+     * Información del objeto en String.
      *
-     * @return String del objeto
+     * @return String del objeto.
      */
     public String toString() {
         return "Tablero{ tamaño=(" + obtenerNumeroFilas() + "x" + obtenerNumeroColumnas() + "), piedrasBlancas=" +
