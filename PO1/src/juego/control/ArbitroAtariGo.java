@@ -14,6 +14,10 @@ public class ArbitroAtariGo {
     private final Tablero tablero;
     private boolean turno = false;
     private final Jugador[] jugadores = new Jugador[2];
+    /**
+     * Una variable que usaremos para indicar que se ha producido conquista.
+     */
+    private boolean conquistaUltimoTurno = false;
 
     /**
      * Constructor del arbitro.
@@ -79,7 +83,7 @@ public class ArbitroAtariGo {
      * @return <code>true</code> si ha acabado o <code>false</code> en caso contrario.
      */
     public boolean estaAcabado() {
-        return obtenerGanador() != null;
+        return conquistaUltimoTurno || obtenerTablero().estaCompleto();
     }
 
     /**
@@ -88,13 +92,13 @@ public class ArbitroAtariGo {
      * @return Jugador ganador o <code>null</code> si no ha acabado el juego.
      */
     public Jugador obtenerGanador() {
-        ArrayList grupos = tablero.obtenerGruposDelJugador(obtenerJugadorConTurno());
+        ArrayList grupos = obtenerTablero().obtenerGruposDelJugador(obtenerJugadorConTurno());
         for (Object grupo : grupos) {
             if (!((Grupo) grupo).estaVivo()) {
                 return obtenerJugadorSinTurno();
             }
         }
-        grupos = tablero.obtenerGruposDelJugador(obtenerJugadorSinTurno());
+        grupos = obtenerTablero().obtenerGruposDelJugador(obtenerJugadorSinTurno());
         for (Object grupo : grupos) {
             if (!((Grupo) grupo).estaVivo()) {
                 return obtenerJugadorConTurno();
@@ -109,8 +113,22 @@ public class ArbitroAtariGo {
      * @param celda Celda en la que realizar jugada.
      */
     public void jugar(Celda celda) {
-        tablero.colocar(obtenerJugadorConTurno().generarPiedra(), celda);
+        obtenerTablero().colocar(obtenerJugadorConTurno().generarPiedra(), celda);
+        comprobarConquista(celda);
         cambiarTurno();
+    }
+
+    /**
+     * Comprueba si se ha producido una conquista.
+     *
+     * @param celda Celda donde se ha producido el movimiento (para eliminar grupos conquistados).
+     */
+    private void comprobarConquista(Celda celda) {
+        conquistaUltimoTurno = obtenerGanador() != null;
+        /*
+        if (conquistaUltimoTurno) {
+            // Eliminar celdas...
+        }*/
     }
 
     /**
@@ -125,7 +143,7 @@ public class ArbitroAtariGo {
         if (!celda.estaVacia()) {
             return false;
         }
-        ArbitroAtariGo copia = new ArbitroAtariGo(tablero.generarCopia());
+        ArbitroAtariGo copia = new ArbitroAtariGo(obtenerTablero().generarCopia());
         for (Jugador jugador : jugadores) {
             copia.registrarJugadoresEnOrden(jugador.obtenerNombre());
         }

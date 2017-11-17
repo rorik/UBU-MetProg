@@ -7,8 +7,14 @@ package juego.control;
  * @version 1.0
  */
 public class ConfiguracionAtariGo {
+    /**
+     * Tamaño usado cuando no se le da ninguno.
+     */
     public static final int TAMAÑO_POR_DEFECTO = 9;
     private static final int[] TAMANAÑOS = {9, 13, 19};
+    /**
+     * Letra que no se debe mostrar en pantalla.
+     */
     public static final char LETRA_NO_UTILIZADA = 'I';
 
     /**

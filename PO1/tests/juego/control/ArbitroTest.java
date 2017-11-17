@@ -68,7 +68,8 @@ class ArbitroTest {
         tablero.colocar(arbitro.obtenerJugadorConTurno().generarPiedra(), tablero.obtenerCelda(1,0));
         tablero.colocar(arbitro.obtenerJugadorConTurno().generarPiedra(), tablero.obtenerCelda(2,1));
         assertFalse(arbitro.estaAcabado());
-        tablero.colocar(arbitro.obtenerJugadorSinTurno().generarPiedra(), tablero.obtenerCelda(1,1));
+        arbitro.cambiarTurno();
+        arbitro.jugar(tablero.obtenerCelda(1,1));
         assertTrue(arbitro.estaAcabado());
         assertEquals("a", arbitro.obtenerGanador().obtenerNombre());
     }

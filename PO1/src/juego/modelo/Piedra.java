@@ -13,7 +13,7 @@ public class Piedra {
     /**
      * Constructor de Piedra.
      *
-     * @param color: Color de la piedra.
+     * @param color Color de la piedra.
      */
     public Piedra(Color color) {
         assert color != null;
@@ -32,7 +32,7 @@ public class Piedra {
     /**
      * Cambia el color de la piedra.
      *
-     * @param color: Color al cual establecer la piedra.
+     * @param color Color al cual establecer la piedra.
      */
     private void establecerColor(Color color) {
         this.color = color;
@@ -41,7 +41,7 @@ public class Piedra {
     /**
      * Establece la celda en la que se encuentre la piedra.
      *
-     * @param celda: Celda a ser asignada.
+     * @param celda Celda a ser asignada.
      */
     public void colocarEn(Celda celda) {
         this.celda = celda;

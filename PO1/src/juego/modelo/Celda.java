@@ -88,7 +88,7 @@ public class Celda {
 
 
     /**
-     * Elimina la piedra asginada a la celda.
+     * Elimina la piedra asignada a la celda.
      */
     public void eliminarPiedra() {
         this.piedra = null;

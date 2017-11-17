@@ -123,7 +123,7 @@ public class Tablero {
      */
     public Celda obtenerCeldaConMismasCoordenadas(Celda celda) {
         if (estaEnTablero(celda)) {
-            return celdas[celda.obtenerFila()][celda.obtenerColumna()];
+            return obtenerCelda(celda.obtenerFila(), celda.obtenerColumna());
         }
         return null;
     }
@@ -150,7 +150,7 @@ public class Tablero {
         int cuenta = 0;
         for (int i = 0; i < obtenerNumeroFilas(); i++) {
             for (int j = 0; j < obtenerNumeroColumnas(); j++) {
-                if (!obtenerCelda(i, j).estaVacia() && obtenerCelda(i, j).obtenerPiedra().obtenerColor() == color) {
+                if (!obtenerCelda(i, j).estaVacia() && obtenerCelda(i, j).obtenerColorDePiedra() == color) {
                     cuenta++;
                 }
             }

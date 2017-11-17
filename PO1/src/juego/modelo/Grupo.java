@@ -14,6 +14,11 @@ public class Grupo {
     private Tablero tablero;
     private ArrayList celdas = new ArrayList();
 
+    /**
+     * Constructor del grupo.
+     * @param celda Primera celda a ser añadida.
+     * @param tablero Tablero del juego.
+     */
     public Grupo(Celda celda, Tablero tablero) {
         this.id = contador++;
         this.tablero = tablero;
@@ -103,14 +108,25 @@ public class Grupo {
      * @return Grupo equivalente en otroTablero.
      */
     public Grupo generarCopiaEnOtroTablero(Tablero otroTablero) {
-        for (Object celda : celdas) {
-            otroTablero.colocar(new Piedra(((Celda) celda).obtenerColorDePiedra()), otroTablero.obtenerCeldaConMismasCoordenadas((Celda) celda));
-        }
-        Grupo nuevo = new Grupo(otroTablero.obtenerCeldaConMismasCoordenadas((Celda) celdas.get(0)), otroTablero);
+        Grupo nuevo = moverCelda(0, otroTablero);
         for (int i = 1; i < obtenerTamaño(); i++) {
-            nuevo.añadirCeldas(new Grupo(otroTablero.obtenerCeldaConMismasCoordenadas((Celda) celdas.get(i)), otroTablero));
+            nuevo.añadirCeldas(moverCelda(i, otroTablero));
         }
         return nuevo;
+    }
+
+    /**
+     * Mueve una celda del tablero a otro tablero, generando una nueva piedra si corresponde.
+     * @param indice Índice de la celda en celdas.
+     * @param otroTablero El tablero al cual se va a copiar la celda
+     * @return Grupo que contiene la celda.
+     */
+    private Grupo moverCelda(int indice, Tablero otroTablero) {
+        Celda celda = (Celda) celdas.get(indice);
+        if (celda.obtenerColorDePiedra() != null) {
+            otroTablero.colocar(new Piedra(celda.obtenerColorDePiedra()), otroTablero.obtenerCeldaConMismasCoordenadas(celda));
+        }
+        return new Grupo(otroTablero.obtenerCeldaConMismasCoordenadas(celda), otroTablero);
     }
 
     /**
