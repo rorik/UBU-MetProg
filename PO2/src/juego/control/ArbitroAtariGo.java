@@ -10,14 +10,14 @@ import java.util.ArrayList;
  * @author <A HREF="mailto:rdg1003@alu.ubu.es">Rodrigo Díaz</A>
  * @version 1.0
  */
-public class ArbitroAtariGo {
+public abstract class ArbitroAtariGo implements Arbitro {
     private final Tablero tablero;
     private boolean turno = false;
     private final Jugador[] jugadores = new Jugador[2];
     /**
      * Una variable que usaremos para indicar que se ha producido conquista.
      */
-    private boolean conquistaUltimoTurno = false;
+    protected boolean conquistaUltimoTurno = false;
 
     /**
      * Constructor del arbitro.
@@ -34,6 +34,7 @@ public class ArbitroAtariGo {
      *
      * @param nombre Nombre del jugador.
      */
+    @Override
     public void registrarJugadoresEnOrden(String nombre) {
         for (int i = 0; i < 2; i++) {
             if (jugadores[i] == null) {
@@ -48,6 +49,7 @@ public class ArbitroAtariGo {
      *
      * @return Jugador con turno.
      */
+    @Override
     public Jugador obtenerJugadorConTurno() {
         return jugadores[turno ? 1 : 0];
     }
@@ -57,6 +59,7 @@ public class ArbitroAtariGo {
      *
      * @return Jugador sin turno.
      */
+    @Override
     public Jugador obtenerJugadorSinTurno() {
         return jugadores[turno ? 0 : 1];
     }
@@ -64,6 +67,7 @@ public class ArbitroAtariGo {
     /**
      * Pasa al siguiente turno.
      */
+    @Override
     public void cambiarTurno() {
         turno = !turno;
     }
@@ -73,24 +77,18 @@ public class ArbitroAtariGo {
      *
      * @return Tablero.
      */
+    @Override
     public Tablero obtenerTablero() {
         return tablero;
     }
 
-    /**
-     * Obtiene si el juego ha acabado o no.
-     *
-     * @return <code>true</code> si ha acabado o <code>false</code> en caso contrario.
-     */
-    public boolean estaAcabado() {
-        return conquistaUltimoTurno || obtenerTablero().estaCompleto();
-    }
 
     /**
      * Obtiene el ganador del juego.
      *
      * @return Jugador ganador o <code>null</code> si no ha acabado el juego.
      */
+    @Override
     public Jugador obtenerGanador() {
         ArrayList grupos = obtenerTablero().obtenerGruposDelJugador(obtenerJugadorConTurno());
         for (Object grupo : grupos) {
@@ -112,6 +110,7 @@ public class ArbitroAtariGo {
      *
      * @param celda Celda en la que realizar jugada.
      */
+    @Override
     public void jugar(Celda celda) {
         obtenerTablero().colocar(obtenerJugadorConTurno().generarPiedra(), celda);
         comprobarConquista(celda);
@@ -139,19 +138,6 @@ public class ArbitroAtariGo {
      * @return <code>true</code> si se puede realizar,
      * <code>false</code> en caso contrario.
      */
-    public boolean esMovimientoLegal(Celda celda) {
-        if (!celda.estaVacia()) {
-            return false;
-        }
-        ArbitroAtariGo copia = new ArbitroAtariGo(obtenerTablero().generarCopia());
-        for (Jugador jugador : jugadores) {
-            copia.registrarJugadoresEnOrden(jugador.obtenerNombre());
-        }
-        if (turno) {
-            copia.cambiarTurno();
-        }
-        copia.jugar(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda));
-        return !copia.estaAcabado() || copia.obtenerGanador().obtenerColor() == obtenerJugadorConTurno().obtenerColor();
-    }
+    public abstract boolean esMovimientoLegal(Celda celda);
 
 }

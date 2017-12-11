@@ -1,8 +1,10 @@
 package juego.modelo;
 
+import juego.util.CoordenadasIncorrectasException;
 import juego.util.Sentido;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Tablero de juego.
@@ -11,8 +13,8 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class Tablero {
-    private Celda[][] celdas;
-    private final ArrayList grupos = new ArrayList();
+    private List<List<Celda>> celdas;
+    private final List<Grupo> grupos = new ArrayList<>();
 
     /**
      * Constructor, itera por cada Celda y la inicializa.
@@ -22,11 +24,13 @@ public class Tablero {
      */
     public Tablero(int filas, int columnas) {
         assert filas > 0 && columnas > 0;
-        celdas = new Celda[filas][columnas];
+        celdas = new ArrayList<>();
         for (int i = 0; i < filas; i++) {
+            List<Celda> fila = new ArrayList<>();
             for (int j = 0; j < columnas; j++) {
-                celdas[i][j] = new Celda(i, j);
+                fila.add(new Celda(i, j));
             }
+            celdas.add(fila);
         }
     }
 
@@ -36,7 +40,7 @@ public class Tablero {
      * @param piedra Piedra
      * @param celda  Celda
      */
-    public void colocar(Piedra piedra, Celda celda) {
+    public void colocar(Piedra piedra, Celda celda) throws CoordenadasIncorrectasException {
         celda.establecerPiedra(piedra);
         piedra.colocarEn(celda);
         fusionarGruposAdyacentes(celda);
@@ -51,12 +55,12 @@ public class Tablero {
     private void fusionarGruposAdyacentes(Celda celda) {
         Grupo nuevoGrupo = new Grupo(celda, this);
         grupos.add(nuevoGrupo);
-        ArrayList gruposAdyacentes = obtenerGruposAdyacentes(celda);
+        List<Grupo> gruposAdyacentes = obtenerGruposAdyacentes(celda);
         if (gruposAdyacentes.size() > 0) {
-            ((Grupo) gruposAdyacentes.get(0)).añadirCeldas(nuevoGrupo);
+            gruposAdyacentes.get(0).añadirCeldas(nuevoGrupo);
             grupos.remove(nuevoGrupo);
             for (int i = 1; i < gruposAdyacentes.size(); i++) {
-                ((Grupo) gruposAdyacentes.get(0)).añadirCeldas((Grupo) gruposAdyacentes.get(i));
+                gruposAdyacentes.get(0).añadirCeldas(gruposAdyacentes.get(i));
                 grupos.remove(gruposAdyacentes.get(i));
             }
         }
@@ -69,13 +73,13 @@ public class Tablero {
      * @param celda Celda a la que obtener grupos adyacentes.
      * @return Lista de grupos adyacentes del mismo color.
      */
-    private ArrayList obtenerGruposAdyacentes(Celda celda) {
-        ArrayList adyacentesDelMismoColor = obtenerCeldasAdyacentesDelMismoColor(celda);
-        ArrayList gruposAdyacentes = new ArrayList();
-        for (Object celdaAdyacente : adyacentesDelMismoColor) {
-            for (Object grupo : grupos) {
-                if (((Grupo) grupo).obtenerColor() == ((Celda) celdaAdyacente).obtenerColorDePiedra() &&
-                        ((Grupo) grupo).contiene((Celda) celdaAdyacente) &&
+    private List<Grupo> obtenerGruposAdyacentes(Celda celda) {
+        List<Celda> adyacentesDelMismoColor = obtenerCeldasAdyacentesDelMismoColor(celda);
+        List<Grupo> gruposAdyacentes = new ArrayList<>();
+        for (Celda celdaAdyacente : adyacentesDelMismoColor) {
+            for (Grupo grupo : grupos) {
+                if (grupo.obtenerColor() == celdaAdyacente.obtenerColorDePiedra() &&
+                        grupo.contiene(celdaAdyacente) &&
                         !gruposAdyacentes.contains(grupo)) {
                     gruposAdyacentes.add(grupo);
                 }
@@ -91,11 +95,10 @@ public class Tablero {
      * @param celda Celda a la que obtener adyacentes y color.
      * @return Lista de celdas adyacentes del mismo color.
      */
-    private ArrayList obtenerCeldasAdyacentesDelMismoColor(Celda celda) {
-        ArrayList adyacentesDelMismoColor = new ArrayList();
-        for (Object celdaAdyacente : obtenerCeldasAdyacentes(celda)) {
-            if (!((Celda) celdaAdyacente).estaVacia()
-                    && ((Celda) celdaAdyacente).obtenerColorDePiedra() == celda.obtenerColorDePiedra()) {
+    private List<Celda> obtenerCeldasAdyacentesDelMismoColor(Celda celda) {
+        List<Celda> adyacentesDelMismoColor = new ArrayList<>();
+        for (Celda celdaAdyacente : obtenerCeldasAdyacentes(celda)) {
+            if (!celdaAdyacente.estaVacia() && celdaAdyacente.obtenerColorDePiedra() == celda.obtenerColorDePiedra()) {
                 adyacentesDelMismoColor.add(celdaAdyacente);
             }
         }
@@ -111,7 +114,7 @@ public class Tablero {
      * null en caso de que se salga de los límites.
      */
     public Celda obtenerCelda(int fila, int columna) {
-        return estaEnTablero(new Celda(fila, columna)) ? celdas[fila][columna] : null;
+        return estaEnTablero(new Celda(fila, columna)) ? celdas.get(fila).get(columna) : null;
     }
 
     /**
@@ -164,7 +167,7 @@ public class Tablero {
      * @return número de filas.
      */
     public int obtenerNumeroFilas() {
-        return this.celdas.length;
+        return this.celdas.size();
     }
 
     /**
@@ -173,7 +176,7 @@ public class Tablero {
      * @return número de columnas.
      */
     public int obtenerNumeroColumnas() {
-        return this.celdas[0].length;
+        return this.celdas.get(0).size();
     }
 
     /**
@@ -198,8 +201,8 @@ public class Tablero {
      * @param celda Celda a la que se obtendrá sus adyacentes.
      * @return Grupo de celdas adyacentes.
      */
-    public ArrayList obtenerCeldasAdyacentes(Celda celda) {
-        ArrayList celdas = new ArrayList();
+    public List<Celda> obtenerCeldasAdyacentes(Celda celda) {
+        List<Celda> celdas = new ArrayList<>();
         for (Sentido sentido : Sentido.values()) {
             int fila = celda.obtenerFila() + sentido.obtenerDesplazamientoHorizontal();
             int columna = celda.obtenerColumna() + sentido.obtenerDesplazamientoVertical();
@@ -218,8 +221,8 @@ public class Tablero {
      */
     public int obtenerGradosDeLibertad(Celda celda) {
         int gradosDeLibertad = 0;
-        for (Object celdasAdyacente : obtenerCeldasAdyacentes(celda)) {
-            if (((Celda) celdasAdyacente).estaVacia()) {
+        for (Celda celdasAdyacente : obtenerCeldasAdyacentes(celda)) {
+            if (celdasAdyacente.estaVacia()) {
                 gradosDeLibertad++;
             }
         }
@@ -233,8 +236,8 @@ public class Tablero {
      */
     public Tablero generarCopia() {
         Tablero copia = new Tablero(obtenerNumeroFilas(), obtenerNumeroColumnas());
-        for (Object grupo : grupos) {
-            ((Grupo) grupo).generarCopiaEnOtroTablero(copia);
+        for (Grupo grupo : grupos) {
+            grupo.generarCopiaEnOtroTablero(copia);
         }
         return copia;
     }
@@ -245,10 +248,10 @@ public class Tablero {
      * @param jugador Jugador a ser consultados.
      * @return Lista de grupos que pertenecen al jugador.
      */
-    public ArrayList obtenerGruposDelJugador(Jugador jugador) {
-        ArrayList gruposDelJugador = new ArrayList();
-        for (Object grupo : grupos) {
-            if (((Grupo) grupo).obtenerColor() == jugador.obtenerColor()) {
+    public List obtenerGruposDelJugador(Jugador jugador) {
+        List<Grupo> gruposDelJugador = new ArrayList<>();
+        for (Grupo grupo : grupos) {
+            if (grupo.obtenerColor() == jugador.obtenerColor()) {
                 gruposDelJugador.add(grupo);
             }
         }
@@ -264,5 +267,9 @@ public class Tablero {
     public String toString() {
         return "Tablero{ tamaño=(" + obtenerNumeroFilas() + "x" + obtenerNumeroColumnas() + "), piedrasBlancas=" +
                 obtenerNumeroPiedras(Color.BLANCO) + ", piedrasNegras=" + obtenerNumeroPiedras(Color.NEGRO) + " }";
+    }
+
+    public int obtenerNumeroPiedrasCapturadas(Color color) {
+        return -1; //TODO: @MAJOR @PR=9 method obtenerNumeroPiedrasCapturadas();
     }
 }

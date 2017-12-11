@@ -11,11 +11,26 @@ public class ConfiguracionAtariGo {
      * Tamaño usado cuando no se le da ninguno.
      */
     public static final int TAMAÑO_POR_DEFECTO = 9;
+
+    /**
+     * Tamaños permitidos del tablero.
+     */
     private static final int[] TAMANAÑOS = {9, 13, 19};
+
     /**
      * Letra que no se debe mostrar en pantalla.
      */
     public static final char LETRA_NO_UTILIZADA = 'I';
+
+    /**
+     * Cantidad mínima de capturas que se deben producir.
+     */
+    public static final int MINIMO_CAPTURAS = 2;
+
+    /**
+     * Cantidad máxima de capturas que se pueden producir.
+     */
+    public static final int MAXIMO_CAPTURAS = 10;
 
     /**
      * Constructor privado vacío de clase estática.

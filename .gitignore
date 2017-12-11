@@ -21,10 +21,13 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-# PO1 project untracked files #
+# PO1/2 project untracked files #
 /PO*/doc/
 /PO*/.idea/
 /PO*/out/
 /PO*/bin/
 /PO*/doccheck/
 /PO*/rsc/
+
+# PO1/2 project override files #
+!/PO*/lib/*
