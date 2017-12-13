@@ -1,6 +1,7 @@
 package juego.control;
 
 import juego.modelo.Celda;
+import juego.modelo.Jugador;
 import juego.modelo.Tablero;
 
 /**
@@ -9,7 +10,7 @@ import juego.modelo.Tablero;
  * @author <A HREF="mailto:rdg1003@alu.ubu.es">Rodrigo Díaz</A>
  * @version 1.0
  */
-public class ArbitroAtariGoBasico extends ArbitroAtariGo{
+public class ArbitroAtariGoBasico extends ArbitroAtariGo {
     /**
      * Constructor del arbitro básico.
      *
@@ -39,6 +40,17 @@ public class ArbitroAtariGoBasico extends ArbitroAtariGo{
      */
     @Override
     public boolean esMovimientoLegal(Celda celda) {
-        return false;
+        if (!celda.estaVacia()) {
+            return false;
+        }
+        ArbitroAtariGo copia = new ArbitroAtariGoBasico(obtenerTablero().generarCopia());
+        for (Jugador jugador : jugadores) {
+            copia.registrarJugadoresEnOrden(jugador.obtenerNombre());
+        }
+        if (turno) {
+            copia.cambiarTurno();
+        }
+        copia.jugar(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda));
+        return !copia.estaAcabado() || copia.obtenerGanador().obtenerColor() == obtenerJugadorConTurno().obtenerColor();
     }
 }

@@ -8,13 +8,13 @@ package juego.modelo;
  */
 public enum Color {
     /**
-     * Color blanco con representación O.
-     */
-    BLANCO('O'),
-    /**
      * Color negro con representación X.
      */
-    NEGRO('X');
+    NEGRO('X'),
+    /**
+     * Color blanco con representación O.
+     */
+    BLANCO('O');
 
     private final char caracter;
 

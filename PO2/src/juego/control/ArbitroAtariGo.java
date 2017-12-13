@@ -3,6 +3,7 @@ package juego.control;
 import juego.modelo.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Arbitro del juego.
@@ -12,8 +13,8 @@ import java.util.ArrayList;
  */
 public abstract class ArbitroAtariGo implements Arbitro {
     private final Tablero tablero;
-    private boolean turno = false;
-    private final Jugador[] jugadores = new Jugador[2];
+    protected boolean turno = false;
+    protected final Jugador[] jugadores = new Jugador[2];
     /**
      * Una variable que usaremos para indicar que se ha producido conquista.
      */
@@ -38,7 +39,7 @@ public abstract class ArbitroAtariGo implements Arbitro {
     public void registrarJugadoresEnOrden(String nombre) {
         for (int i = 0; i < 2; i++) {
             if (jugadores[i] == null) {
-                jugadores[i] = new Jugador(nombre, new Color[]{Color.NEGRO, Color.BLANCO}[i]);
+                jugadores[i] = new Jugador(nombre, Color.values()[i]);
                 break;
             }
         }
@@ -47,7 +48,7 @@ public abstract class ArbitroAtariGo implements Arbitro {
     /**
      * Obtiene el jugador que puede realizar turno.
      *
-     * @return Jugador con turno.
+     * @return Jugador con turno, o <code>null</code> en caso de que no exista.
      */
     @Override
     public Jugador obtenerJugadorConTurno() {
@@ -57,7 +58,7 @@ public abstract class ArbitroAtariGo implements Arbitro {
     /**
      * Obtiene el jugador que no puede realizar turno.
      *
-     * @return Jugador sin turno.
+     * @return Jugador sin turno, o <code>null</code> en caso de que no exista.
      */
     @Override
     public Jugador obtenerJugadorSinTurno() {
@@ -90,19 +91,35 @@ public abstract class ArbitroAtariGo implements Arbitro {
      */
     @Override
     public Jugador obtenerGanador() {
-        ArrayList grupos = obtenerTablero().obtenerGruposDelJugador(obtenerJugadorConTurno());
-        for (Object grupo : grupos) {
-            if (!((Grupo) grupo).estaVivo()) {
+        ArrayList<Grupo> grupos = obtenerTablero().obtenerGruposDelJugador(obtenerJugadorConTurno());
+        for (Grupo grupo : grupos) {
+            if (!grupo.estaVivo()) {
                 return obtenerJugadorSinTurno();
             }
         }
         grupos = obtenerTablero().obtenerGruposDelJugador(obtenerJugadorSinTurno());
-        for (Object grupo : grupos) {
-            if (!((Grupo) grupo).estaVivo()) {
+        for (Grupo grupo : grupos) {
+            if (!grupo.estaVivo()) {
                 return obtenerJugadorConTurno();
             }
         }
         return null;
+    }
+
+    /**
+     * Obtiene todos los grupos de un jugador que estén muertos.
+     *
+     * @param jugador Jugador del cual obtener los grupos.
+     * @return Grupos que no estén vivos.
+     */
+    private List<Grupo> obtenerGruposMuertos(Jugador jugador) {
+        ArrayList<Grupo> gruposMuertos = new ArrayList<>();
+        for (Grupo grupo : obtenerTablero().obtenerGruposDelJugador(jugador)) {
+            if (!grupo.estaVivo()) {
+                gruposMuertos.add(grupo);
+            }
+        }
+        return gruposMuertos;
     }
 
     /**
@@ -123,11 +140,11 @@ public abstract class ArbitroAtariGo implements Arbitro {
      * @param celda Celda donde se ha producido el movimiento (para eliminar grupos conquistados).
      */
     private void comprobarConquista(Celda celda) {
-        conquistaUltimoTurno = obtenerGanador() != null;
-        /*
-        if (conquistaUltimoTurno) {
-            // Eliminar celdas...
-        }*/
+        //conquistaUltimoTurno = obtenerGanador() != null;
+        List<Grupo> muertos = obtenerGruposMuertos(obtenerJugadorSinTurno());
+        for (Grupo grupo : muertos) {
+            System.out.println(grupo);
+        }
     }
 
     /**

@@ -20,7 +20,8 @@ public class Grupo {
      * @param tablero Tablero del juego.
      */
     public Grupo(Celda celda, Tablero tablero) {
-        this.id = contador++;
+        assert !celda.estaVacia() : "La celda [" + celda.toString() + "] está vacía";
+        id = contador++;
         this.tablero = tablero;
         celdas.add(celda);
     }
@@ -38,10 +39,10 @@ public class Grupo {
      * Obtiene el color de las piedras del grupo,
      * o <code>null</code> en caso de que el grupo haya sido capturado.
      *
-     * @return color del grupo o <code>null</code> si no tiene piedra.
+     * @return color del grupo o <code>null</code> si no esta vivo.
      */
     public Color obtenerColor() {
-        return celdas.get(0).obtenerPiedra() == null ? null : celdas.get(0).obtenerColorDePiedra();
+        return estaVivo() ? celdas.get(0).obtenerColorDePiedra() : null;
     }
 
     /**
@@ -51,11 +52,12 @@ public class Grupo {
      * <code>false</code> en caso contrario.
      */
     public boolean estaVivo() {
-        int gradosDeLibertad = 0;
         for (Celda celda : celdas) {
-            gradosDeLibertad += tablero.obtenerGradosDeLibertad(celda);
+            if (tablero.obtenerGradosDeLibertad(celda) > 0) {
+                return true;
+            }
         }
-        return gradosDeLibertad > 0;
+        return false;
     }
 
     /**
@@ -97,7 +99,7 @@ public class Grupo {
      */
     public void eliminarPiedras() {
         for (Celda celda : celdas) {
-            (celda).eliminarPiedra();
+            celda.eliminarPiedra();
         }
     }
 

@@ -41,9 +41,10 @@ public class Tablero {
      * @param celda  Celda
      */
     public void colocar(Piedra piedra, Celda celda) throws CoordenadasIncorrectasException {
-        celda.establecerPiedra(piedra);
-        piedra.colocarEn(celda);
-        fusionarGruposAdyacentes(celda);
+        Celda celdaEquivalente = obtenerCeldaConMismasCoordenadas(celda);
+        celdaEquivalente.establecerPiedra(piedra);
+        piedra.colocarEn(celdaEquivalente);
+        fusionarGruposAdyacentes(celdaEquivalente);
     }
 
     /**
@@ -111,10 +112,13 @@ public class Tablero {
      * @param fila    Fila de la celda.
      * @param columna Columna de la celda.
      * @return devuelve la celda que se encuentre en la posición (fila, columna), o
-     * null en caso de que se salga de los límites.
+     * <code>null</code> en caso de que se salga de los límites.
      */
-    public Celda obtenerCelda(int fila, int columna) {
-        return estaEnTablero(new Celda(fila, columna)) ? celdas.get(fila).get(columna) : null;
+    public Celda obtenerCelda(int fila, int columna) throws CoordenadasIncorrectasException {
+        if (!estaEnTablero(fila, columna)) {
+            throw new CoordenadasIncorrectasException("No existe una celda con coordenadas " + fila + ", " + columna);
+        }
+        return celdas.get(fila).get(columna);
     }
 
     /**
@@ -122,9 +126,9 @@ public class Tablero {
      *
      * @param celda celda de la cual conocemos las coordenadas.
      * @return devuelve la celda que se encuentre en la posición (fila, columna), o
-     * null en caso de que se salga de los límites.
+     * <code>null</code> en caso de que se salga de los límites.
      */
-    public Celda obtenerCeldaConMismasCoordenadas(Celda celda) {
+    public Celda obtenerCeldaConMismasCoordenadas(Celda celda) throws CoordenadasIncorrectasException {
         if (estaEnTablero(celda)) {
             return obtenerCelda(celda.obtenerFila(), celda.obtenerColumna());
         }
@@ -135,12 +139,25 @@ public class Tablero {
      * Calcula si una posición está dentro del tablero.
      *
      * @param celda Celda a ser comprobada.
-     * @return verdadero en caso de que se encuentre dentro, falso en el caso
-     * contrario.
+     * @return <code>true</code> en caso de que se encuentre dentro,
+     * <code>false</code> en el caso contrario.
      */
     public boolean estaEnTablero(Celda celda) {
-        return celda.obtenerFila() >= 0 && celda.obtenerFila() < obtenerNumeroFilas() &&
-                celda.obtenerColumna() >= 0 && celda.obtenerColumna() < obtenerNumeroColumnas();
+        return estaEnTablero(celda.obtenerFila(), celda.obtenerColumna());
+    }
+
+    /**
+     * Calcula si una posición está dentro del tablero.
+     *
+     * @param fila Fila de la posición a ser comprobada,
+     *             debe ser mayor o igual a 0 y menor que el número de filas.
+     * @param columna Columna de la posición a ser comprobada,
+     *             debe ser mayor o igual a 0 y menor que el número de filas.
+     * @return <code>true</code> en caso de que se encuentre dentro,
+     * <code>false</code> en el caso contrario.
+     */
+    private boolean estaEnTablero(int fila, int columna) {
+        return fila >= 0 && fila < obtenerNumeroFilas() && columna >= 0 && columna < obtenerNumeroColumnas();
     }
 
     /**
@@ -201,12 +218,12 @@ public class Tablero {
      * @param celda Celda a la que se obtendrá sus adyacentes.
      * @return Grupo de celdas adyacentes.
      */
-    public List<Celda> obtenerCeldasAdyacentes(Celda celda) {
+    public List<Celda> obtenerCeldasAdyacentes(Celda celda) throws CoordenadasIncorrectasException {
         List<Celda> celdas = new ArrayList<>();
         for (Sentido sentido : Sentido.values()) {
             int fila = celda.obtenerFila() + sentido.obtenerDesplazamientoHorizontal();
             int columna = celda.obtenerColumna() + sentido.obtenerDesplazamientoVertical();
-            if (estaEnTablero(new Celda(fila, columna))) {
+            if (estaEnTablero(fila, columna)) {
                 celdas.add(obtenerCelda(fila, columna));
             }
         }
@@ -219,7 +236,7 @@ public class Tablero {
      * @param celda Celda a ser comprobada.
      * @return Grados de libertad de la celda.
      */
-    public int obtenerGradosDeLibertad(Celda celda) {
+    public int obtenerGradosDeLibertad(Celda celda) throws CoordenadasIncorrectasException {
         int gradosDeLibertad = 0;
         for (Celda celdasAdyacente : obtenerCeldasAdyacentes(celda)) {
             if (celdasAdyacente.estaVacia()) {
@@ -248,8 +265,8 @@ public class Tablero {
      * @param jugador Jugador a ser consultados.
      * @return Lista de grupos que pertenecen al jugador.
      */
-    public List obtenerGruposDelJugador(Jugador jugador) {
-        List<Grupo> gruposDelJugador = new ArrayList<>();
+    public ArrayList<Grupo> obtenerGruposDelJugador(Jugador jugador) {
+        ArrayList<Grupo> gruposDelJugador = new ArrayList<>();
         for (Grupo grupo : grupos) {
             if (grupo.obtenerColor() == jugador.obtenerColor()) {
                 gruposDelJugador.add(grupo);
