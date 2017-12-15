@@ -13,12 +13,8 @@ import java.util.List;
  */
 public abstract class ArbitroAtariGo implements Arbitro {
     private final Tablero tablero;
-    protected boolean turno = false;
-    protected final Jugador[] jugadores = new Jugador[2];
-    /**
-     * Una variable que usaremos para indicar que se ha producido conquista.
-     */
-    protected boolean conquistaUltimoTurno = false;
+    private boolean turno = false;
+    private final Jugador[] jugadores = new Jugador[2];
 
     /**
      * Constructor del arbitro.
@@ -83,43 +79,14 @@ public abstract class ArbitroAtariGo implements Arbitro {
         return tablero;
     }
 
-
     /**
-     * Obtiene el ganador del juego.
+     * Obtiene si el juego ha acabado o no.
      *
-     * @return Jugador ganador o <code>null</code> si no ha acabado el juego.
+     * @return <code>true</code> si ha acabado o <code>false</code> en caso contrario.
      */
     @Override
-    public Jugador obtenerGanador() {
-        ArrayList<Grupo> grupos = obtenerTablero().obtenerGruposDelJugador(obtenerJugadorConTurno());
-        for (Grupo grupo : grupos) {
-            if (!grupo.estaVivo()) {
-                return obtenerJugadorSinTurno();
-            }
-        }
-        grupos = obtenerTablero().obtenerGruposDelJugador(obtenerJugadorSinTurno());
-        for (Grupo grupo : grupos) {
-            if (!grupo.estaVivo()) {
-                return obtenerJugadorConTurno();
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Obtiene todos los grupos de un jugador que estén muertos.
-     *
-     * @param jugador Jugador del cual obtener los grupos.
-     * @return Grupos que no estén vivos.
-     */
-    private List<Grupo> obtenerGruposMuertos(Jugador jugador) {
-        ArrayList<Grupo> gruposMuertos = new ArrayList<>();
-        for (Grupo grupo : obtenerTablero().obtenerGruposDelJugador(jugador)) {
-            if (!grupo.estaVivo()) {
-                gruposMuertos.add(grupo);
-            }
-        }
-        return gruposMuertos;
+    public boolean estaAcabado() {
+        return obtenerGanador() != null || obtenerTablero().estaCompleto();
     }
 
     /**
@@ -129,22 +96,26 @@ public abstract class ArbitroAtariGo implements Arbitro {
      */
     @Override
     public void jugar(Celda celda) {
+        ArrayList<Grupo> gruposEnTablero = tablero.obtenerGruposDelJugador(obtenerJugadorConTurno());
+        gruposEnTablero.addAll(tablero.obtenerGruposDelJugador(obtenerJugadorSinTurno()));
         obtenerTablero().colocar(obtenerJugadorConTurno().generarPiedra(), celda);
-        comprobarConquista(celda);
         cambiarTurno();
     }
 
     /**
-     * Comprueba si se ha producido una conquista.
+     * Obtiene el ganador del juego.
      *
-     * @param celda Celda donde se ha producido el movimiento (para eliminar grupos conquistados).
+     * @return Jugador ganador o <code>null</code> si no ha acabado el juego.
      */
-    private void comprobarConquista(Celda celda) {
-        //conquistaUltimoTurno = obtenerGanador() != null;
-        List<Grupo> muertos = obtenerGruposMuertos(obtenerJugadorSinTurno());
-        for (Grupo grupo : muertos) {
-            System.out.println(grupo);
+    @Override
+    public Jugador obtenerGanador() {
+        if (obtenerTablero().obtenerNumeroPiedrasCapturadas(obtenerJugadorConTurno().obtenerColor()) >= obtenerCota()) {
+            return obtenerJugadorSinTurno();
         }
+        if (obtenerTablero().obtenerNumeroPiedrasCapturadas(obtenerJugadorSinTurno().obtenerColor()) >= obtenerCota()) {
+            return obtenerJugadorConTurno();
+        }
+        return null;
     }
 
     /**
@@ -155,6 +126,33 @@ public abstract class ArbitroAtariGo implements Arbitro {
      * @return <code>true</code> si se puede realizar,
      * <code>false</code> en caso contrario.
      */
-    public abstract boolean esMovimientoLegal(Celda celda);
+    public boolean esMovimientoLegal(Celda celda) {
+        if (!celda.estaVacia()) {
+            return false;
+        }
+        ArbitroAtariGo copia = generarCopia();
+        for (Jugador jugador : jugadores) {
+            copia.registrarJugadoresEnOrden(jugador.obtenerNombre());
+        }
+        if (turno) {
+            copia.cambiarTurno();
+        }
+        copia.jugar(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda));
+        return copia.obtenerTablero().obtenerNumeroPiedrasCapturadas(obtenerJugadorSinTurno().obtenerColor()) > 0 ||
+                copia.obtenerTablero().obtenerNumeroPiedrasCapturadas(obtenerJugadorConTurno().obtenerColor()) == 0;
+    }
 
+    /**
+     * Genera una copia del arbitro actual.
+     *
+     * @return Arbitro con un nuevo tablero y el mismo estado de juego.
+     */
+    protected abstract ArbitroAtariGo generarCopia();
+
+    /**
+     * Obtiene El numero mínimo de piedras que se deben capturar en una sola jugada para finalizar el encuentro.
+     *
+     * @return Cota del número de capturas
+     */
+    protected abstract int obtenerCota();
 }

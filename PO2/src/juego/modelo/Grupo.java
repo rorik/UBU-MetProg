@@ -119,6 +119,7 @@ public class Grupo {
 
     /**
      * Mueve una celda del tablero a otro tablero, generando una nueva piedra si corresponde.
+     *
      * @param indice Índice de la celda en celdas.
      * @param otroTablero El tablero al cual se va a copiar la celda
      * @return Grupo que contiene la celda.

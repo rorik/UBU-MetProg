@@ -22,7 +22,7 @@ import juego.util.CoordenadasIncorrectasException;
  * 2º ITIG - Curso 2017-2018. Interfaz en modo texto del juego.
  * Versión de código incompleto a completar por los alumnos.
  * 
- * @author COMPLETAR
+ * @author <A HREF="mailto:rdg1003@alu.ubu.es">Rodrigo Díaz</A>
  * @version 2.0
  * 
  */
@@ -47,14 +47,25 @@ public class AtariGo {
 	 *            nombres de los jugadores y tamaño del tablero
 	 */
 	public static void main(String[] args) {
-		/* Nota:
-		 * 
-		 * A COMPLETAR REUTILIZANDO LOS
-		 * MÉTODOS DISPONIBLES EN EL RESTO DEL CÓDIGO
-		 * NO MODIFICAR LOS MÉTODOS PRIVADOS DADOS. 
-		 * 
-		 * ESPECIAL ATENCIÓN AL TRATAMIENTO DE EXCEPCIONES.
-		 */ 
+		if (!sonArgumentosValidos(args)) {
+			mostrarAyuda();
+			args = new String[]{};
+		}
+        /*
+          La razón de realizar esta comprobación en el main, a pesar de que
+          se realice en la función inicializarConArgumentos, es que si no
+          se habilitan los asserts (opción por defecto), podemos ejecutar
+          el programa con dimensiones y cotas incorrectas.
+         */
+		inicializarConArgumentos(args);
+		while (!arbitro.estaAcabado()) {
+			mostrarTablero(arbitro.obtenerTablero());
+			mostrarPrompt();
+			Celda celda = introducirCelda(new Scanner(System.in), arbitro.obtenerTablero());
+			realizarJugadaSiEsValida(celda);
+			mostrarInformeCapturas(arbitro.obtenerTablero());
+		}
+		mostrarResultadoFinalPartida(arbitro);
 	}
 
 	/**

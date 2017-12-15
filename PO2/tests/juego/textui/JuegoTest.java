@@ -1,6 +1,7 @@
 package juego.textui;
 
 import juego.control.ArbitroAtariGo;
+import juego.control.ArbitroAtariGoBasico;
 import juego.modelo.Celda;
 import juego.modelo.Tablero;
 import org.junit.jupiter.api.Disabled;
@@ -15,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * rorik.me
  * github.com/rorik
  */
-class JuegoTest {
-    /*
+public class JuegoTest {
+
     @Test
     void doubleLock1() {
         ArbitroAtariGo arbitro = doubleLock9x9();
@@ -45,7 +46,7 @@ class JuegoTest {
     }
 
     private ArbitroAtariGo doubleLock9x9() {
-        ArbitroAtariGo arbitro = new ArbitroAtariGo(new Tablero(9,9));
+        ArbitroAtariGo arbitro = new ArbitroAtariGoBasico(new Tablero(9,9));
         arbitro.registrarJugadoresEnOrden("Alice");
         arbitro.registrarJugadoresEnOrden("Bob");
         assertJugada(arbitro, 4, 0);
@@ -72,7 +73,7 @@ class JuegoTest {
     }
 
     private ArbitroAtariGo innerLock9x9() {
-        ArbitroAtariGo arbitro = new ArbitroAtariGo(new Tablero(9,9));
+        ArbitroAtariGo arbitro = new ArbitroAtariGoBasico(new Tablero(9,9));
         arbitro.registrarJugadoresEnOrden("Alice");
         arbitro.registrarJugadoresEnOrden("Bob");
         assertJugada(arbitro, 4,3);
@@ -99,15 +100,15 @@ class JuegoTest {
         return arbitro;
     }
 
-    private void assertJugada(ArbitroAtariGo arbitro, int fila, int columna, boolean assertion) {
+    public void assertJugada(ArbitroAtariGo arbitro, int fila, int columna, boolean assertion) {
         assertEquals(assertion, jugarSiValido(arbitro, fila, columna));
     }
 
-    private void assertJugada(ArbitroAtariGo arbitro, int fila, int columna) {
+    public void assertJugada(ArbitroAtariGo arbitro, int fila, int columna) {
         assertJugada(arbitro, fila, columna, true);
     }
 
-    private boolean jugarSiValido(ArbitroAtariGo arbitro, int fila, int columna) {
+    public boolean jugarSiValido(ArbitroAtariGo arbitro, int fila, int columna) {
         Celda celda = arbitro.obtenerTablero().obtenerCelda(fila, columna);
         if (arbitro.esMovimientoLegal(celda)) {
             arbitro.jugar(celda);
@@ -116,7 +117,7 @@ class JuegoTest {
         return false;
     }
 
-    private void printTablero(ArbitroAtariGo arbitro) {
+    public static void printTablero(ArbitroAtariGo arbitro) {
         String salida = "";
         for (int i = 0; i < arbitro.obtenerTablero().obtenerNumeroFilas(); i++) {
             for (int j = 0; j < arbitro.obtenerTablero().obtenerNumeroColumnas(); j++) {
@@ -134,5 +135,4 @@ class JuegoTest {
         else
             System.out.println(":: " + arbitro.obtenerJugadorConTurno().obtenerColor().toChar() + " ::");
     }
-    */
 }

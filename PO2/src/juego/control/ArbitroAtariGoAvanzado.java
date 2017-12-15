@@ -1,10 +1,12 @@
 package juego.control;
 
-import juego.modelo.Celda;
 import juego.modelo.Tablero;
 
+
 /**
- * Arbitro Avanzado. TODO @PR=2 Additional doc.
+ * Arbitro Avanzado. Acepta una cota mínima en el constructor.
+ * El juego termina cuando se realice una conquista que elimine
+ * al menos el mismo número de la cota mínima establecida.
  *
  * @author <A HREF="mailto:rdg1003@alu.ubu.es">Rodrigo Díaz</A>
  * @version 1.0
@@ -24,25 +26,22 @@ public class ArbitroAtariGoAvanzado extends ArbitroAtariGo {
     }
 
     /**
-     * Obtiene si el juego ha acabado o no.
+     * Obtiene el numero mínimo de piedras que se deben capturar en una sola jugada para finalizar el encuentro.
      *
-     * @return <code>true</code> si ha acabado o <code>false</code> en caso contrario.
+     * @return Cota del número de capturas
      */
     @Override
-    public boolean estaAcabado() {
-        return false || obtenerTablero().estaCompleto();
+    protected int obtenerCota() {
+        return cotaNumeroCapturas;
     }
 
     /**
-     * Comprueba si un movimiento es legal. Comprobando que la celda
-     * esté vacía y que el movimiento no resulte en perdida para el jugador.
+     * Genera una copia del arbitro actual.
      *
-     * @param celda Celda a ser comprobada.
-     * @return <code>true</code> si se puede realizar,
-     * <code>false</code> en caso contrario.
+     * @return Arbitro con un nuevo tablero y el mismo estado de juego.
      */
     @Override
-    public boolean esMovimientoLegal(Celda celda) {
-        return false;
+    protected ArbitroAtariGo generarCopia() {
+        return new ArbitroAtariGoAvanzado(obtenerTablero().generarCopia(), cotaNumeroCapturas);
     }
 }

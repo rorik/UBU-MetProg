@@ -1,11 +1,10 @@
 package juego.control;
 
-import juego.modelo.Celda;
-import juego.modelo.Jugador;
 import juego.modelo.Tablero;
 
 /**
- * Arbitro Básico. TODO @PR=2 Additional doc.
+ * Arbitro Básico.
+ * El juego termina al realizar una conquista.
  *
  * @author <A HREF="mailto:rdg1003@alu.ubu.es">Rodrigo Díaz</A>
  * @version 1.0
@@ -20,37 +19,25 @@ public class ArbitroAtariGoBasico extends ArbitroAtariGo {
         super(tablero);
     }
 
+
     /**
-     * Obtiene si el juego ha acabado o no.
+     * Obtiene el numero mínimo de piedras que se deben capturar en una sola jugada para finalizar el encuentro.
+     * En el caso del arbitro básico, siempre va a ser 1, ya que termina con la primera conquista.
      *
-     * @return <code>true</code> si ha acabado o <code>false</code> en caso contrario.
+     * @return Cota del número de capturas
      */
     @Override
-    public boolean estaAcabado() {
-        return conquistaUltimoTurno || obtenerTablero().estaCompleto();
+    protected int obtenerCota() {
+        return 1;
     }
 
     /**
-     * Comprueba si un movimiento es legal. Comprobando que la celda
-     * esté vacía y que el movimiento no resulte en perdida para el jugador.
+     * Genera una copia del arbitro actual.
      *
-     * @param celda Celda a ser comprobada.
-     * @return <code>true</code> si se puede realizar,
-     * <code>false</code> en caso contrario.
+     * @return Arbitro con un nuevo tablero y el mismo estado de juego.
      */
     @Override
-    public boolean esMovimientoLegal(Celda celda) {
-        if (!celda.estaVacia()) {
-            return false;
-        }
-        ArbitroAtariGo copia = new ArbitroAtariGoBasico(obtenerTablero().generarCopia());
-        for (Jugador jugador : jugadores) {
-            copia.registrarJugadoresEnOrden(jugador.obtenerNombre());
-        }
-        if (turno) {
-            copia.cambiarTurno();
-        }
-        copia.jugar(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda));
-        return !copia.estaAcabado() || copia.obtenerGanador().obtenerColor() == obtenerJugadorConTurno().obtenerColor();
+    protected ArbitroAtariGo generarCopia() {
+        return new ArbitroAtariGoBasico(obtenerTablero().generarCopia());
     }
 }

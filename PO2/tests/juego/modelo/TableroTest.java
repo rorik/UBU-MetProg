@@ -24,7 +24,7 @@ class TableroTest {
     void colocar() {
         Celda celda = new Celda(0, 0);
         Piedra piedra = new Piedra(Color.NEGRO);
-        Tablero tablero = new Tablero(1, 1);
+        Tablero tablero = new Tablero(1, 2);
         tablero.colocar(piedra, celda);
         assertEquals(celda.toString(), tablero.obtenerCelda(0,0).toString());
         assertEquals(piedra, tablero.obtenerCelda(0,0).obtenerPiedra());
@@ -54,7 +54,7 @@ class TableroTest {
 
     @Test
     void obtenerNumeroPiedras() {
-        Tablero tablero = new Tablero(2, 2);
+        Tablero tablero = new Tablero(3, 3);
         assertEquals(0, tablero.obtenerNumeroPiedras(Color.NEGRO));
         tablero.colocar(new Piedra(Color.NEGRO), tablero.obtenerCelda(0, 0));
         tablero.colocar(new Piedra(Color.NEGRO), tablero.obtenerCelda(0, 1));
@@ -80,7 +80,7 @@ class TableroTest {
         assertFalse(tablero.estaCompleto());
         tablero.colocar(new Piedra(Color.NEGRO), tablero.obtenerCelda(0, 1));
         assertFalse(tablero.estaCompleto());
-        tablero.colocar(new Piedra(Color.BLANCO), tablero.obtenerCelda(0, 0));
+        tablero.colocar(new Piedra(Color.NEGRO), tablero.obtenerCelda(0, 0));
         assertTrue(tablero.estaCompleto());
     }
 

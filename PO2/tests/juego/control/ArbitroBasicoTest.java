@@ -65,11 +65,10 @@ class ArbitroBasicoTest {
         arbitro.registrarJugadoresEnOrden("a");
         arbitro.registrarJugadoresEnOrden("b");
         tablero.colocar(arbitro.obtenerJugadorConTurno().generarPiedra(), tablero.obtenerCelda(0,1));
-        tablero.colocar(arbitro.obtenerJugadorConTurno().generarPiedra(), tablero.obtenerCelda(1,0));
-        tablero.colocar(arbitro.obtenerJugadorConTurno().generarPiedra(), tablero.obtenerCelda(2,1));
+        arbitro.jugar(tablero.obtenerCelda(1,0));
         assertFalse(arbitro.estaAcabado());
-        arbitro.cambiarTurno();
         arbitro.jugar(tablero.obtenerCelda(1,1));
+        arbitro.jugar(tablero.obtenerCelda(2,1));
         assertTrue(arbitro.estaAcabado());
         assertEquals("a", arbitro.obtenerGanador().obtenerNombre());
     }
