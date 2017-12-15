@@ -40,8 +40,9 @@ public class Tablero {
     /**
      * Enlaza una piedra a una columna.
      *
-     * @param piedra Piedra
-     * @param celda  Celda
+     * @param piedra Piedra a colocar.
+     * @param celda  Celda donde va a ser colocada.
+     * @throws CoordenadasIncorrectasException en caso de que se coloque fuera del tablero.
      */
     public void colocar(Piedra piedra, Celda celda) throws CoordenadasIncorrectasException {
         List<Grupo> copiaGruposNegro = obtenerGruposDelColor(Color.NEGRO);
@@ -151,8 +152,8 @@ public class Tablero {
      *
      * @param fila    Fila de la celda.
      * @param columna Columna de la celda.
-     * @return devuelve la celda que se encuentre en la posición (fila, columna), o
-     * <code>null</code> en caso de que se salga de los límites.
+     * @return devuelve la celda que se encuentre en la posición (fila, columna).
+     * @throws CoordenadasIncorrectasException en caso de que no exista celda con esas coordenadas.
      */
     public Celda obtenerCelda(int fila, int columna) throws CoordenadasIncorrectasException {
         if (!estaEnTablero(fila, columna)) {
@@ -165,14 +166,11 @@ public class Tablero {
      * Obtiene la celda que se tenga las mismas coordenadas que otra celda.
      *
      * @param celda celda de la cual conocemos las coordenadas.
-     * @return devuelve la celda que se encuentre en la posición (fila, columna), o
-     * <code>null</code> en caso de que se salga de los límites.
+     * @return devuelve la celda que se encuentre en la posición (fila, columna).
+     * @throws CoordenadasIncorrectasException en caso de que no exista celda con esas coordenadas.
      */
     public Celda obtenerCeldaConMismasCoordenadas(Celda celda) throws CoordenadasIncorrectasException {
-        if (estaEnTablero(celda)) {
-            return obtenerCelda(celda.obtenerFila(), celda.obtenerColumna());
-        }
-        return null;
+        return obtenerCelda(celda.obtenerFila(), celda.obtenerColumna());
     }
 
     /**
@@ -257,6 +255,7 @@ public class Tablero {
      *
      * @param celda Celda a la que se obtendrá sus adyacentes.
      * @return Grupo de celdas adyacentes.
+     * @throws CoordenadasIncorrectasException en caso de que no exista celda con esas coordenadas.
      */
     public List<Celda> obtenerCeldasAdyacentes(Celda celda) throws CoordenadasIncorrectasException {
         List<Celda> celdas = new ArrayList<>();
@@ -275,6 +274,7 @@ public class Tablero {
      *
      * @param celda Celda a ser comprobada.
      * @return Grados de libertad de la celda.
+     * @throws CoordenadasIncorrectasException en caso de que no exista celda con esas coordenadas.
      */
     public int obtenerGradosDeLibertad(Celda celda) throws CoordenadasIncorrectasException {
         int gradosDeLibertad = 0;
@@ -337,6 +337,13 @@ public class Tablero {
                 obtenerNumeroPiedras(Color.BLANCO) + ", piedrasNegras=" + obtenerNumeroPiedras(Color.NEGRO) + " }";
     }
 
+    /**
+     * Obtiene la cantidad de piedras capturadas de un determinado color
+     * a causa de la piedra colocada.
+     *
+     * @param color Color a comprobar.
+     * @return Numero de piedras de ese color que han sido conquistadas.
+     */
     public int obtenerNumeroPiedrasCapturadas(Color color) {
         return (color == Color.NEGRO) ? piedrasCapturadasNegras : piedrasCapturadasBlancas;
     }

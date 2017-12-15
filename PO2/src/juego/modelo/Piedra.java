@@ -4,7 +4,7 @@ package juego.modelo;
  * Unidad de juego, se colocan en el tablero en cada celda.
  *
  * @author <A HREF="mailto:rdg1003@alu.ubu.es">Rodrigo Díaz</A>
- * @version 1.0
+ * @version 2.0
  */
 public class Piedra {
     private Color color;

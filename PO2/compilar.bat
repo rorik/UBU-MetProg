@@ -6,3 +6,4 @@ javac -encoding utf8 ^
 ./src/juego/modelo/* ^
 ./src/juego/textui/* ^
 ./src/juego/util/*
+copy .\rsc\log4j.properties .\bin\log4j.properties

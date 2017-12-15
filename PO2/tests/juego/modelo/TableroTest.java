@@ -41,7 +41,7 @@ class TableroTest {
     void obtenerCeldaConMismasCoordenadas() {
         Tablero tablero = new Tablero(2, 2);
         assertNotNull(tablero.obtenerCeldaConMismasCoordenadas(new Celda(0, 1)));
-        assertNull(tablero.obtenerCeldaConMismasCoordenadas(new Celda(1, 2)));
+        assertThrows(CoordenadasIncorrectasException.class, () -> tablero.obtenerCeldaConMismasCoordenadas(new Celda(1, 2)));
     }
 
     @Test

@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Grupo de celdas de un mismo jugador.
  *
  * @author <A HREF="mailto:rdg1003@alu.ubu.es">Rodrigo Díaz</A>
- * @version 1.0
+ * @version 2.0
  */
 public class Grupo {
     private static int contador = 0;

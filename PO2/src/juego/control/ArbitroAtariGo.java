@@ -1,6 +1,7 @@
 package juego.control;
 
 import juego.modelo.*;
+import juego.util.CoordenadasIncorrectasException;
 
 import java.util.ArrayList;
 
@@ -8,7 +9,7 @@ import java.util.ArrayList;
  * Arbitro del juego.
  *
  * @author <A HREF="mailto:rdg1003@alu.ubu.es">Rodrigo Díaz</A>
- * @version 1.0
+ * @version 2.0
  */
 public abstract class ArbitroAtariGo implements Arbitro {
     private final Tablero tablero;
@@ -92,9 +93,13 @@ public abstract class ArbitroAtariGo implements Arbitro {
      * Ejecuta una jugada y cambia de turno.
      *
      * @param celda Celda en la que realizar jugada.
+     * @throws CoordenadasIncorrectasException en caso de que se juegue en una celda que no esté dentro del tablero.
      */
     @Override
-    public void jugar(Celda celda) {
+    public void jugar(Celda celda) throws CoordenadasIncorrectasException {
+        if (!obtenerTablero().estaEnTablero(celda)) {
+            throw new CoordenadasIncorrectasException("Se ha intentado jugar en una celda que no existe, celda=" + celda.toString());
+        }
         ArrayList<Grupo> gruposEnTablero = tablero.obtenerGruposDelJugador(obtenerJugadorConTurno());
         gruposEnTablero.addAll(tablero.obtenerGruposDelJugador(obtenerJugadorSinTurno()));
         obtenerTablero().colocar(obtenerJugadorConTurno().generarPiedra(), celda);

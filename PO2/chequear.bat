@@ -6,4 +6,3 @@ javadoc ^
 -d ./doccheck ^
 -sourcepath ./src ^
 -subpackages juego
-pause

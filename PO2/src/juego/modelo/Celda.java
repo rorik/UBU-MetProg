@@ -4,7 +4,7 @@ package juego.modelo;
  * Celda donde se colocaran las piedras.
  *
  * @author <A HREF="mailto:rdg1003@alu.ubu.es">Rodrigo Díaz</A>
- * @version 1.0
+ * @version 2.0
  */
 public class Celda {
     private final int fila;
