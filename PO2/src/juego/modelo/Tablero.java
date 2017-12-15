@@ -91,10 +91,8 @@ public class Tablero {
      * @param celda Celda a meter en grupo y fusionar.
      * @param gruposCopia Lista con los grupos del mismo color que el nuevo grupo
      *                    que estaban vivos antes de realizar la jugada.
-     * @return Devuelve <code>null</code> en caso de fusionarse con otro grupo,
-     * en caso contrario, devuelve el grupo recién creado.
      */
-    private Grupo fusionarGruposAdyacentes(Celda celda, List<Grupo> gruposCopia) {
+    private void fusionarGruposAdyacentes(Celda celda, List<Grupo> gruposCopia) {
         Grupo nuevoGrupo = new Grupo(celda, this);
         List<Grupo> gruposAdyacentes = obtenerGruposAdyacentes(celda);
         if (gruposAdyacentes.size() > 0) {
@@ -104,11 +102,11 @@ public class Tablero {
                 grupos.remove(gruposAdyacentes.get(i));
                 gruposCopia.remove(gruposAdyacentes.get(i));
             }
-            return null;
         }
-        grupos.add(nuevoGrupo);
-        gruposCopia.add(nuevoGrupo);
-        return nuevoGrupo;
+        else {
+            grupos.add(nuevoGrupo);
+            gruposCopia.add(nuevoGrupo);
+        }
     }
 
     /**

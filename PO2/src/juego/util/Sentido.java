@@ -31,7 +31,7 @@ public enum Sentido {
 	 * @param desplazamientoHorizontal desplazamiento en horizontal
 	 * @param desplazamientoVertical desplazamiento en vertical
 	 */
-	private Sentido(int desplazamientoHorizontal, int desplazamientoVertical) {
+    Sentido(int desplazamientoHorizontal, int desplazamientoVertical) {
 		establecerDesplazamientoHorizontal(desplazamientoHorizontal);
 		establecerDesplazamientoVertical(desplazamientoVertical);
 	}

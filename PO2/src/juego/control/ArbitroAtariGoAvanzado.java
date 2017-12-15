@@ -13,7 +13,7 @@ import juego.modelo.Tablero;
  */
 public class ArbitroAtariGoAvanzado extends ArbitroAtariGo {
 
-    private int cotaNumeroCapturas;
+    private final int cotaNumeroCapturas;
 
     /**
      * Constructor del arbitro avanzado.

@@ -12,7 +12,7 @@ public class Grupo {
     private static int contador = 0;
     private int id;
     private Tablero tablero;
-    private ArrayList<Celda> celdas = new ArrayList<>();
+    private final ArrayList<Celda> celdas = new ArrayList<>();
 
     /**
      * Constructor del grupo.

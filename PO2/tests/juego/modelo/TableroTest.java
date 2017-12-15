@@ -93,10 +93,10 @@ class TableroTest {
         Piedra[] piedras = new Piedra[]{new Piedra(Color.NEGRO), new Piedra(Color.BLANCO)};
         tablero.colocar(piedras[0], tablero.obtenerCelda(1, 1));
         tablero.colocar(piedras[1], tablero.obtenerCelda(1, 2));
-        assertEquals(piedras[1], ((Celda) tablero.obtenerCeldasAdyacentes(piedras[0].obtenerCelda()).get(2)).obtenerPiedra());
-        assertNull(((Celda) tablero.obtenerCeldasAdyacentes(piedras[0].obtenerCelda()).get(0)).obtenerPiedra());
-        assertNull(((Celda) tablero.obtenerCeldasAdyacentes(piedras[0].obtenerCelda()).get(1)).obtenerPiedra());
-        assertNull(((Celda) tablero.obtenerCeldasAdyacentes(piedras[0].obtenerCelda()).get(3)).obtenerPiedra());
+        assertEquals(piedras[1], tablero.obtenerCeldasAdyacentes(piedras[0].obtenerCelda()).get(2).obtenerPiedra());
+        assertNull(tablero.obtenerCeldasAdyacentes(piedras[0].obtenerCelda()).get(0).obtenerPiedra());
+        assertNull(tablero.obtenerCeldasAdyacentes(piedras[0].obtenerCelda()).get(1).obtenerPiedra());
+        assertNull(tablero.obtenerCeldasAdyacentes(piedras[0].obtenerCelda()).get(3).obtenerPiedra());
     }
 
     @Test

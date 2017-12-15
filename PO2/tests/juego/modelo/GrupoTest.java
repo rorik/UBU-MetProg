@@ -66,7 +66,7 @@ class GrupoTest {
         Tablero tablero = new Tablero(2,1);
         Jugador jugador = new Jugador("", Color.NEGRO);
         tablero.colocar(jugador.generarPiedra(), tablero.obtenerCelda(0,0));
-        Grupo grupo = (Grupo) tablero.obtenerGruposDelJugador(jugador).get(0);
+        Grupo grupo = tablero.obtenerGruposDelJugador(jugador).get(0);
         assertTrue(grupo.contiene(tablero.obtenerCelda(0,0)));
         assertFalse(grupo.contiene(tablero.obtenerCelda(1,0)));
     }
@@ -76,9 +76,9 @@ class GrupoTest {
         Tablero tablero = new Tablero(2,2);
         Jugador jugador = new Jugador("", Color.BLANCO);
         tablero.colocar(jugador.generarPiedra(), tablero.obtenerCelda(0,0));
-        Grupo grupo1 = (Grupo) tablero.obtenerGruposDelJugador(jugador).get(0);
+        Grupo grupo1 = tablero.obtenerGruposDelJugador(jugador).get(0);
         tablero.colocar(jugador.generarPiedra(), tablero.obtenerCelda(1,1));
-        Grupo grupo2 = (Grupo) tablero.obtenerGruposDelJugador(jugador).get(1);
+        Grupo grupo2 = tablero.obtenerGruposDelJugador(jugador).get(1);
         assertEquals(1, grupo1.obtenerTamaño());
         grupo1.añadirCeldas(grupo2);
         assertEquals(2, grupo1.obtenerTamaño());
@@ -93,7 +93,7 @@ class GrupoTest {
         tablero.colocar(jugador.generarPiedra(), tablero.obtenerCelda(0,1));
         tablero.colocar(new Piedra(Color.BLANCO), tablero.obtenerCelda(1,1));
         tablero.colocar(jugador.generarPiedra(), tablero.obtenerCelda(1,2));
-        ((Grupo) tablero.obtenerGruposDelJugador(jugador).get(0)).eliminarPiedras();
+        tablero.obtenerGruposDelJugador(jugador).get(0).eliminarPiedras();
         assertNull(tablero.obtenerCelda(0,0).obtenerPiedra());
         assertNull(tablero.obtenerCelda(0,1).obtenerPiedra());
         assertNotNull(tablero.obtenerCelda(1,1).obtenerPiedra());
@@ -108,7 +108,7 @@ class GrupoTest {
         tablero1.colocar(jugador.generarPiedra(), tablero1.obtenerCelda(0,0));
         tablero1.colocar(jugador.generarPiedra(), tablero1.obtenerCelda(0,1));
         tablero1.colocar(jugador.generarPiedra(), tablero1.obtenerCelda(1,0));
-        Grupo grupo = (Grupo) tablero1.obtenerGruposDelJugador(jugador).get(0);
+        Grupo grupo = tablero1.obtenerGruposDelJugador(jugador).get(0);
         grupo.generarCopiaEnOtroTablero(tablero2);
         assertNotNull(tablero2.obtenerCelda(0,0).obtenerPiedra());
         assertNotNull(tablero2.obtenerCelda(0,1).obtenerPiedra());

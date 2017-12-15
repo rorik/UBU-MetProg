@@ -2,7 +2,6 @@ package juego.control;
 
 import juego.modelo.Celda;
 import juego.modelo.Tablero;
-import juego.textui.JuegoTest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

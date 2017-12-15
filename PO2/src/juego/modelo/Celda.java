@@ -7,8 +7,8 @@ package juego.modelo;
  * @version 1.0
  */
 public class Celda {
-    private int fila;
-    private int columna;
+    private final int fila;
+    private final int columna;
     private Piedra piedra;
 
     /**

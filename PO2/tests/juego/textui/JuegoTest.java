@@ -4,7 +4,6 @@ import juego.control.ArbitroAtariGo;
 import juego.control.ArbitroAtariGoBasico;
 import juego.modelo.Celda;
 import juego.modelo.Tablero;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

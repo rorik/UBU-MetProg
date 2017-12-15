@@ -3,7 +3,6 @@ package juego.control;
 import juego.modelo.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Arbitro del juego.
