@@ -22,6 +22,7 @@
 hs_err_pid*
 
 # PO1/2 project untracked files #
+*.iml
 /PO*/doc/
 /PO*/.idea/
 /PO*/out/
