@@ -117,10 +117,18 @@ public class JuegoTest {
     }
 
     public static void printTablero(ArbitroAtariGo arbitro) {
+        printTablero(arbitro.obtenerTablero());
+        if (arbitro.estaAcabado())
+            System.out.println(">> " + arbitro.obtenerGanador().obtenerColor().toChar() + " <<");
+        else
+            System.out.println(":: " + arbitro.obtenerJugadorConTurno().obtenerColor().toChar() + " ::");
+    }
+
+    public static void printTablero(Tablero tablero) {
         String salida = "";
-        for (int i = 0; i < arbitro.obtenerTablero().obtenerNumeroFilas(); i++) {
-            for (int j = 0; j < arbitro.obtenerTablero().obtenerNumeroColumnas(); j++) {
-                Celda celda = arbitro.obtenerTablero().obtenerCelda(i, j);
+        for (int i = 0; i < tablero.obtenerNumeroFilas(); i++) {
+            for (int j = 0; j < tablero.obtenerNumeroColumnas(); j++) {
+                Celda celda = tablero.obtenerCelda(i, j);
                 if (celda.estaVacia())
                     salida = salida.concat("-");
                 else
@@ -129,9 +137,5 @@ public class JuegoTest {
             System.out.println(salida);
             salida = "";
         }
-        if (arbitro.estaAcabado())
-            System.out.println(">> " + arbitro.obtenerGanador().obtenerColor().toChar() + " <<");
-        else
-            System.out.println(":: " + arbitro.obtenerJugadorConTurno().obtenerColor().toChar() + " ::");
     }
 }

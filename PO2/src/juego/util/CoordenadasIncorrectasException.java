@@ -26,7 +26,7 @@ public class CoordenadasIncorrectasException extends RuntimeException {
 
     /**
      * Construye una una excepción de coordenadas con la causa especificada y el detalle
-     * del <null>Throwable</null> o <code>null</code> en caso de que sea nulo.
+     * del <code>Throwable</code> o <code>null</code> en caso de que sea nulo.
      *
      * @param arg0 Causa y Detalle de la excepción.
      */

@@ -7,7 +7,7 @@ import juego.modelo.Tablero;
  * El juego termina al realizar una conquista.
  *
  * @author <A HREF="mailto:rdg1003@alu.ubu.es">Rodrigo Díaz</A>
- * @version 1.0
+ * @version 2.0
  */
 public class ArbitroAtariGoBasico extends ArbitroAtariGo {
     /**
@@ -29,15 +29,5 @@ public class ArbitroAtariGoBasico extends ArbitroAtariGo {
     @Override
     protected int obtenerCota() {
         return 1;
-    }
-
-    /**
-     * Genera una copia del arbitro actual.
-     *
-     * @return Arbitro con un nuevo tablero y el mismo estado de juego.
-     */
-    @Override
-    protected ArbitroAtariGo generarCopia() {
-        return new ArbitroAtariGoBasico(obtenerTablero().generarCopia());
     }
 }

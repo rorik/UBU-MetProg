@@ -10,10 +10,10 @@ import java.util.List;
  * Tablero de juego.
  *
  * @author <A HREF="mailto:rdg1003@alu.ubu.es">Rodrigo Díaz</A>
- * @version 1.0
+ * @version 2.0
  */
 public class Tablero {
-    private final List<List<Celda>> celdas;
+    private final List<List<Celda>> celdas = new ArrayList<>();
     private final List<Grupo> grupos = new ArrayList<>();
 
     private int piedrasCapturadasNegras = 0;
@@ -27,7 +27,6 @@ public class Tablero {
      */
     public Tablero(int filas, int columnas) {
         assert filas > 0 && columnas > 0;
-        celdas = new ArrayList<>();
         for (int i = 0; i < filas; i++) {
             List<Celda> fila = new ArrayList<>();
             for (int j = 0; j < columnas; j++) {
@@ -45,106 +44,83 @@ public class Tablero {
      * @throws CoordenadasIncorrectasException en caso de que se coloque fuera del tablero.
      */
     public void colocar(Piedra piedra, Celda celda) throws CoordenadasIncorrectasException {
-        List<Grupo> copiaGruposNegro = obtenerGruposDelColor(Color.NEGRO);
-        List<Grupo> copiaGruposBlanco = obtenerGruposDelColor(Color.BLANCO);
-        Celda celdaEquivalente = obtenerCeldaConMismasCoordenadas(celda);
-        celdaEquivalente.establecerPiedra(piedra);
-        piedra.colocarEn(celdaEquivalente);
-        fusionarGruposAdyacentes(celdaEquivalente, piedra.obtenerColor() == Color.NEGRO ? copiaGruposNegro : copiaGruposBlanco);
-        comprobarConquistas(copiaGruposNegro, copiaGruposBlanco, piedra.obtenerColor());
-
-    }
-
-    /**
-     * Comprueba si se ha realizado una conquista en el tablero,
-     * esta acción no ocurre en el caso de que solo exista un grupo en el tablero,
-     * es decir, que todas las celdas estén ocupadas por un solo jugador.
-     *
-     * @param gruposNegro Grupos del jugador negro vivos antes de colocar la piedra.
-     * @param gruposBlanco Grupos del jugador blanco vivos antes de colocar la piedra.
-     * @param colorJugador Color del jugador que realiza la jugada.
-     */
-    private void comprobarConquistas(List<Grupo> gruposNegro, List<Grupo> gruposBlanco, Color colorJugador) {
-        piedrasCapturadasNegras = 0;
-        piedrasCapturadasBlancas = 0;
-        if (!estaCompleto() || gruposNegro.size() * gruposBlanco.size() > 0) {
-            gruposNegro.removeAll(obtenerGruposDelColor(Color.NEGRO));
-            gruposBlanco.removeAll(obtenerGruposDelColor(Color.BLANCO));
-            if (!(colorJugador == Color.NEGRO && gruposBlanco.size() > 0)) {
-                for (Grupo muerto : gruposNegro) {
-                    muerto.eliminarPiedras();
-                    piedrasCapturadasNegras += muerto.obtenerTamaño();
-                }
-            }
-            if (!(colorJugador == Color.BLANCO && gruposNegro.size() > 0)) {
-                for (Grupo muerto : gruposBlanco) {
-                    muerto.eliminarPiedras();
-                    piedrasCapturadasBlancas += muerto.obtenerTamaño();
+        celda = obtenerCeldaConMismasCoordenadas(celda);
+        List<Grupo> gruposEliminados = new ArrayList<>();
+        List<Grupo> gruposAnterioresBlanco = obtenerGruposDelColor(Color.BLANCO);
+        List<Grupo> gruposAnterioresNegro = obtenerGruposDelColor(Color.NEGRO);
+        piedra.colocarEn(celda);
+        celda.establecerPiedra(piedra);
+        Grupo nuevo = new Grupo(celda, this);
+        for (Celda adyacente : obtenerCeldasAdyacentes(celda)) {
+            if (adyacente.obtenerColorDePiedra() == celda.obtenerColorDePiedra()) {
+                for (Grupo grupo : grupos) {
+                    if (grupo.contiene(adyacente)) {
+                        nuevo.añadirCeldas(grupo);
+                        gruposEliminados.add(grupo);
+                    }
                 }
             }
         }
+        grupos.removeAll(gruposEliminados);
+        grupos.add(nuevo);
+        if (piedra.obtenerColor() == Color.BLANCO) {
+            gruposAnterioresBlanco.add(nuevo);
+            gruposAnterioresBlanco.removeAll(gruposEliminados);
+        } else {
+            gruposAnterioresNegro.add(nuevo);
+            gruposAnterioresNegro.removeAll(gruposEliminados);
+        }
+        eliminarCapturas(piedra.obtenerColor(), gruposAnterioresBlanco, gruposAnterioresNegro);
     }
 
     /**
-     * Añade una celda a un nuevo grupo y comprueba si hay grupos adyacentes,
-     * en caso de que haya, agrupa todos en uno solo.
+     * Elimina todas las capturas que hayan ocurrido, según el color del jugador que realice la jugada.
      *
-     * @param celda Celda a meter en grupo y fusionar.
-     * @param gruposCopia Lista con los grupos del mismo color que el nuevo grupo
-     *                    que estaban vivos antes de realizar la jugada.
+     * @param colorConPrioridad Color del la piedra colocada.
+     * @param gruposAnterioresBlanco Grupos de color blanco que había antes de colocar.
+     * @param gruposAnterioresNegro Grupos de color negro que había antes de colocar.
      */
-    private void fusionarGruposAdyacentes(Celda celda, List<Grupo> gruposCopia) {
-        Grupo nuevoGrupo = new Grupo(celda, this);
-        List<Grupo> gruposAdyacentes = obtenerGruposAdyacentes(celda);
-        if (gruposAdyacentes.size() > 0) {
-            gruposAdyacentes.get(0).añadirCeldas(nuevoGrupo);
-            for (int i = 1; i < gruposAdyacentes.size(); i++) {
-                gruposAdyacentes.get(0).añadirCeldas(gruposAdyacentes.get(i));
-                grupos.remove(gruposAdyacentes.get(i));
-                gruposCopia.remove(gruposAdyacentes.get(i));
-            }
+    private void eliminarCapturas(Color colorConPrioridad, List<Grupo> gruposAnterioresBlanco, List<Grupo> gruposAnterioresNegro){
+        Color colorSinPrioridad;
+        List<Grupo> grupoConPrioridad;
+        List<Grupo> grupoSinPrioridad;
+        gruposAnterioresBlanco.removeAll(obtenerGruposDelColor(Color.BLANCO));
+        gruposAnterioresNegro.removeAll(obtenerGruposDelColor(Color.NEGRO));
+        colorSinPrioridad = colorConPrioridad == Color.BLANCO ? Color.NEGRO : Color.BLANCO;
+        if (colorConPrioridad == Color.NEGRO) {
+            grupoConPrioridad = gruposAnterioresNegro;
+            grupoSinPrioridad = gruposAnterioresBlanco;
         }
         else {
-            grupos.add(nuevoGrupo);
-            gruposCopia.add(nuevoGrupo);
+            grupoConPrioridad = gruposAnterioresBlanco;
+            grupoSinPrioridad = gruposAnterioresNegro;
+        }
+        if (eliminarColor(grupoSinPrioridad, colorSinPrioridad) == 0 && ! estaCompleto()) {
+            eliminarColor(grupoConPrioridad, colorConPrioridad);
         }
     }
 
     /**
-     * Obtiene los grupos del mismo jugador que contienen
-     * celdas adyacentes a la celda dada.
+     * Elimina todas las piedras de una lista de grupos.
      *
-     * @param celda Celda a la que obtener grupos adyacentes.
-     * @return Lista de grupos adyacentes del mismo color.
+     * @param gruposEliminados Lista de grupos a vaciar.
+     * @param color Color de las piedras.
+     * @return Número de piedras eliminadas.
      */
-    private List<Grupo> obtenerGruposAdyacentes(Celda celda) {
-        List<Celda> adyacentesDelMismoColor = obtenerCeldasAdyacentesDelMismoColor(celda);
-        List<Grupo> gruposAdyacentes = new ArrayList<>();
-        for (Celda celdaAdyacente : adyacentesDelMismoColor) {
-            for (Grupo grupo : grupos) {
-                if (grupo.contiene(celdaAdyacente) && !gruposAdyacentes.contains(grupo)) {
-                    gruposAdyacentes.add(grupo);
-                }
-            }
+    private int eliminarColor(List<Grupo> gruposEliminados, Color color) {
+        int eliminadas = 0;
+        for (Grupo grupo : gruposEliminados) {
+            eliminadas += grupo.obtenerTamaño();
+            grupo.eliminarPiedras();
+            grupos.remove(grupo);
         }
-        return gruposAdyacentes;
-    }
-
-    /**
-     * Obtiene todas las celdas que contengan una piedra del mismo color,
-     * relativo a la celda dada.
-     *
-     * @param celda Celda a la que obtener adyacentes y color.
-     * @return Lista de celdas adyacentes del mismo color.
-     */
-    private List<Celda> obtenerCeldasAdyacentesDelMismoColor(Celda celda) {
-        List<Celda> adyacentesDelMismoColor = new ArrayList<>();
-        for (Celda celdaAdyacente : obtenerCeldasAdyacentes(celda)) {
-            if (!celdaAdyacente.estaVacia() && celdaAdyacente.obtenerColorDePiedra() == celda.obtenerColorDePiedra()) {
-                adyacentesDelMismoColor.add(celdaAdyacente);
-            }
+        if (color == Color.BLANCO) {
+            piedrasCapturadasBlancas += eliminadas;
         }
-        return adyacentesDelMismoColor;
+        else {
+            piedrasCapturadasNegras += eliminadas;
+        }
+        return eliminadas;
     }
 
     /**
@@ -258,6 +234,7 @@ public class Tablero {
      * @throws CoordenadasIncorrectasException en caso de que no exista celda con esas coordenadas.
      */
     public List<Celda> obtenerCeldasAdyacentes(Celda celda) throws CoordenadasIncorrectasException {
+        celda = obtenerCeldaConMismasCoordenadas(celda);
         List<Celda> celdas = new ArrayList<>();
         for (Sentido sentido : Sentido.values()) {
             int fila = celda.obtenerFila() + sentido.obtenerDesplazamientoHorizontal();
@@ -293,6 +270,8 @@ public class Tablero {
      */
     public Tablero generarCopia() {
         Tablero copia = new Tablero(obtenerNumeroFilas(), obtenerNumeroColumnas());
+        copia.piedrasCapturadasNegras = this.piedrasCapturadasNegras;
+        copia.piedrasCapturadasBlancas = this.piedrasCapturadasBlancas;
         for (Grupo grupo : grupos) {
             if (grupo.estaVivo()) {
                 grupo.generarCopiaEnOtroTablero(copia);

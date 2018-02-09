@@ -1,5 +1,6 @@
 package juego.modelo;
 
+import juego.textui.JuegoTest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,6 +59,7 @@ class GrupoTest {
         grupo = tablero.obtenerGruposDelJugador(jugador).get(0);
         assertEquals(3, grupo.obtenerTamaño());
         tablero.colocar(jugador.generarPiedra(), tablero.obtenerCelda(0,0));
+        grupo = tablero.obtenerGruposDelJugador(jugador).get(0);
         assertEquals(4, grupo.obtenerTamaño());
     }
 

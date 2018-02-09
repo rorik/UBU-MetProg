@@ -1,6 +1,7 @@
 package juego.modelo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Grupo de celdas de un mismo jugador.
@@ -12,7 +13,7 @@ public class Grupo {
     private static int contador = 0;
     private int id;
     private Tablero tablero;
-    private final ArrayList<Celda> celdas = new ArrayList<>();
+    private final List<Celda> celdas = new ArrayList<>();
 
     /**
      * Constructor del grupo.
@@ -91,7 +92,11 @@ public class Grupo {
      * @param grupo Grupo de celdas a ser añadidas.
      */
     public void añadirCeldas(Grupo grupo) {
-        celdas.addAll(grupo.celdas);
+        for (int i = 0; i < grupo.obtenerTamaño(); i++) {
+            Celda celda = grupo.celdas.get(i);
+            if (!contiene(celda))
+                celdas.add(celda);
+        }
     }
 
     /**

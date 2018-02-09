@@ -9,7 +9,7 @@ import juego.util.CoordenadasIncorrectasException;
  * Interfaz del arbitro.
  *
  * @author <A HREF="mailto:rdg1003@alu.ubu.es">Rodrigo Díaz</A>
- * @version 1.0
+ * @version 2.0
  */
 public interface Arbitro {
     /**

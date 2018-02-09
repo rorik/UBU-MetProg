@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * @version 2.0
  */
 public abstract class ArbitroAtariGo implements Arbitro {
-    private final Tablero tablero;
+    private Tablero tablero;
     private boolean turno = false;
     private final Jugador[] jugadores = new Jugador[2];
 
@@ -97,13 +97,14 @@ public abstract class ArbitroAtariGo implements Arbitro {
      */
     @Override
     public void jugar(Celda celda) throws CoordenadasIncorrectasException {
-        if (!obtenerTablero().estaEnTablero(celda)) {
-            throw new CoordenadasIncorrectasException("Se ha intentado jugar en una celda que no existe, celda=" + celda.toString());
+        try {
+            obtenerTablero().colocar(obtenerJugadorConTurno().generarPiedra(), celda);
+            cambiarTurno();
         }
-        ArrayList<Grupo> gruposEnTablero = tablero.obtenerGruposDelJugador(obtenerJugadorConTurno());
-        gruposEnTablero.addAll(tablero.obtenerGruposDelJugador(obtenerJugadorSinTurno()));
-        obtenerTablero().colocar(obtenerJugadorConTurno().generarPiedra(), celda);
-        cambiarTurno();
+        catch (CoordenadasIncorrectasException e) {
+            throw new CoordenadasIncorrectasException("Se ha intentado jugar en una celda que no existe, celda=" +
+                    celda.toString());
+        }
     }
 
     /**
@@ -134,27 +135,20 @@ public abstract class ArbitroAtariGo implements Arbitro {
         if (!celda.estaVacia()) {
             return false;
         }
-        ArbitroAtariGo copia = generarCopia();
-        for (Jugador jugador : jugadores) {
-            copia.registrarJugadoresEnOrden(jugador.obtenerNombre());
-        }
-        if (turno) {
-            copia.cambiarTurno();
-        }
-        copia.jugar(copia.obtenerTablero().obtenerCeldaConMismasCoordenadas(celda));
-        return copia.obtenerTablero().obtenerNumeroPiedrasCapturadas(obtenerJugadorSinTurno().obtenerColor()) > 0 ||
-                copia.obtenerTablero().obtenerNumeroPiedrasCapturadas(obtenerJugadorConTurno().obtenerColor()) == 0;
+        Tablero old = obtenerTablero();
+        this.tablero = old.generarCopia();
+        obtenerTablero().colocar(obtenerJugadorConTurno().generarPiedra(), celda);
+        boolean valid = obtenerGanador() == obtenerJugadorConTurno() ||
+                obtenerTablero().obtenerNumeroPiedrasCapturadas(obtenerJugadorSinTurno().obtenerColor()) >
+                        old.obtenerNumeroPiedrasCapturadas(obtenerJugadorSinTurno().obtenerColor()) ||
+                obtenerTablero().obtenerNumeroPiedrasCapturadas(obtenerJugadorConTurno().obtenerColor()) ==
+                        old.obtenerNumeroPiedrasCapturadas(obtenerJugadorConTurno().obtenerColor());
+        this.tablero = old;
+        return valid;
     }
 
     /**
-     * Genera una copia del arbitro actual.
-     *
-     * @return Arbitro con un nuevo tablero y el mismo estado de juego.
-     */
-    protected abstract ArbitroAtariGo generarCopia();
-
-    /**
-     * Obtiene El numero mínimo de piedras que se deben capturar en una sola jugada para finalizar el encuentro.
+     * Obtiene El numero mínimo de piedras que se deben capturar para finalizar el encuentro.
      *
      * @return Cota del número de capturas
      */

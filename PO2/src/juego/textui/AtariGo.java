@@ -49,23 +49,18 @@ public class AtariGo {
 	public static void main(String[] args) {
 		if (!sonArgumentosValidos(args)) {
 			mostrarAyuda();
-			args = new String[]{};
 		}
-        /*
-          La razón de realizar esta comprobación en el main, a pesar de que
-          se realice en la función inicializarConArgumentos, es que si no
-          se habilitan los asserts (opción por defecto), podemos ejecutar
-          el programa con dimensiones y cotas incorrectas.
-         */
-		inicializarConArgumentos(args);
-		while (!arbitro.estaAcabado()) {
-			mostrarTablero(arbitro.obtenerTablero());
-			mostrarPrompt();
-			Celda celda = introducirCelda(new Scanner(System.in), arbitro.obtenerTablero());
-			realizarJugadaSiEsValida(celda);
-			mostrarInformeCapturas(arbitro.obtenerTablero());
+		else {
+			inicializarConArgumentos(args);
+			while (!arbitro.estaAcabado()) {
+				mostrarTablero(arbitro.obtenerTablero());
+				mostrarPrompt();
+				Celda celda = introducirCelda(new Scanner(System.in), arbitro.obtenerTablero());
+				realizarJugadaSiEsValida(celda);
+				mostrarInformeCapturas(arbitro.obtenerTablero());
+			}
+			mostrarResultadoFinalPartida(arbitro);
 		}
-		mostrarResultadoFinalPartida(arbitro);
 	}
 
 	/**
